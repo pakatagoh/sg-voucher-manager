@@ -2,6 +2,32 @@ Welcome to your new TanStack app!
 
 # Getting Started
 
+## Environment Setup
+
+This application requires an encryption key to secure sensitive voucher URLs. Follow these steps:
+
+1. **Copy the environment template:**
+   ```bash
+   cp .env.example .env
+   ```
+
+2. **Generate a secure encryption key:**
+   ```bash
+   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
+   ```
+
+3. **Update the `.env` file** with your generated key:
+   ```
+   ENCRYPTION_KEY=your_generated_key_here
+   ```
+
+   **IMPORTANT:** 
+   - Keep this key secret and never commit it to version control
+   - If you lose this key, you won't be able to decrypt existing voucher URLs
+   - Use different keys for development and production environments
+
+## Running the Application
+
 To run this application:
 
 ```bash

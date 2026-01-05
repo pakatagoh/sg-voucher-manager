@@ -1,4 +1,7 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
 
 body {
   @apply m-0;
@@ -12,4 +15,88 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+@theme inline {
+  /* Bauhaus Design System - Minimalist Geometric */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
+  --radius-3xl: 0px;
+  --radius-4xl: 0px;
+  
+  /* Bauhaus Colors - Blue, Black, Neutrals */
+  --color-bauhaus-blue: oklch(0.55 0.15 240);
+  --color-bauhaus-blue-dark: oklch(0.42 0.12 240);
+  --color-bauhaus-black: oklch(0.15 0 0);
+  --color-bauhaus-white: oklch(0.98 0 0);
+  --color-bauhaus-gray-100: oklch(0.95 0 0);
+  --color-bauhaus-gray-200: oklch(0.88 0 0);
+  --color-bauhaus-gray-300: oklch(0.75 0 0);
+  --color-bauhaus-gray-400: oklch(0.60 0 0);
+  --color-bauhaus-gray-500: oklch(0.45 0 0);
+  
+  /* Semantic Color Mapping */
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+}
+
+:root {
+  --radius: 0px;
+  
+  /* Bauhaus Minimal Color Scheme */
+  --background: oklch(0.98 0 0);
+  --foreground: oklch(0.15 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0 0);
+  --primary: oklch(0.55 0.15 240);
+  --primary-foreground: oklch(0.98 0 0);
+  --secondary: oklch(0.15 0 0);
+  --secondary-foreground: oklch(0.98 0 0);
+  --muted: oklch(0.95 0 0);
+  --muted-foreground: oklch(0.45 0 0);
+  --destructive: oklch(0.55 0.22 25);
+  --border: oklch(0.15 0 0);
+  --input: oklch(0.88 0 0);
+  --ring: oklch(0.55 0.15 240);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  
+  /* Bauhaus Typography - Geometric and Bold */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-bold uppercase tracking-wide;
+  }
+  
+  h1 {
+    @apply text-3xl md:text-4xl;
+  }
+  
+  h2 {
+    @apply text-2xl md:text-3xl;
+  }
+  
+  h3 {
+    @apply text-xl md:text-2xl;
+  }
 }
