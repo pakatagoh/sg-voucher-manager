@@ -1,40 +1,30 @@
-import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { getVoucherData } from "@/server/voucher";
-import type { VoucherData } from "@/types/voucher";
+import { useVoucherData } from "@/hooks/useVoucherData";
 import { VoucherDataDisplay } from "./VoucherDataDisplay";
 
 interface VoucherLinkItemProps {
-	id: string;
-	url: string;
+	id: string; // Storage ID
+	voucherId: string; // CDC voucher ID
+	url: string; // Full URL for display
 	onDelete: (id: string) => void;
 	isDeleting: boolean;
-	autoFetch?: boolean;
 }
 
 export function VoucherLinkItem({
 	id,
+	voucherId,
 	url,
 	onDelete,
 	isDeleting,
-	autoFetch = false,
 }: VoucherLinkItemProps) {
-	// Query for fetching voucher data for this specific URL
 	const {
 		data: voucherData,
 		refetch,
 		isFetching,
 		isError,
 		error,
-	} = useQuery<VoucherData>({
-		queryKey: ["voucherData", url],
-		queryFn: async () => {
-			const result = await getVoucherData({ data: { url } });
-			return result as VoucherData;
-		},
-		enabled: autoFetch, // Fetch automatically if autoFetch is true
-	});
+	} = useVoucherData(voucherId);
 
 	return (
 		<li className="bg-background mb-8">
