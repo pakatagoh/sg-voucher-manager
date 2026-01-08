@@ -1,12 +1,12 @@
 // Shared TypeScript types for voucher management
 
-export type VoucherType = "heartland" | "supermarket";
+export type VoucherType = "heartland" | "supermarket" | "climate";
 
 export interface Voucher {
 	id: string;
 	state: string;
 	voucher_value: number;
-	type: VoucherType;
+	type: VoucherType | null;
 	merchant_name: string | null;
 	last_redeemed_timestamp: string | null;
 }
@@ -16,6 +16,7 @@ export interface VoucherData {
 		name: string;
 		description: string;
 		validity_end: string;
+		category: string;
 		default_vouchers: Array<{
 			value: number;
 			quantity: number;
@@ -41,4 +42,5 @@ export interface ProcessedVoucherData {
 	validityEnd: string;
 	heartlandBreakdown: DenominationBreakdown;
 	supermarketBreakdown: DenominationBreakdown;
+	climateBreakdown: DenominationBreakdown;
 }
