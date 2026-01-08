@@ -30,7 +30,7 @@ export function useVoucherLinks() {
 			// 1. Validate URL format
 			if (!isValidCdcVoucherUrl(url)) {
 				throw new Error(
-					"Invalid CDC Voucher URL. The URL must begin with https://voucher.redeem.gov.sg",
+					"Invalid CDC Voucher link. The link must begin with https://voucher.redeem.gov.sg",
 				);
 			}
 
@@ -47,7 +47,7 @@ export function useVoucherLinks() {
 					data: { id: voucherId },
 				})) as VoucherData;
 			} catch {
-				throw new Error("Invalid voucher or unable to fetch voucher data");
+				throw new Error("Invalid voucher or unable to retrieve voucher data");
 			}
 
 			// 4. Save to localStorage
