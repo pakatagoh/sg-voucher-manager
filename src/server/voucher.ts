@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
-import { rateLimitMiddleware } from "./middleware";
+
+// import { rateLimitMiddleware } from "./middleware";
 
 // Zod schema to validate voucher ID (alphanumeric characters only)
 const voucherIdSchema = z.object({
@@ -23,7 +24,7 @@ const voucherIdSchema = z.object({
  */
 export const getVoucherData = createServerFn({ method: "POST" })
 	.inputValidator(voucherIdSchema)
-	.middleware([rateLimitMiddleware])
+	// .middleware([rateLimitMiddleware])
 	.handler(async ({ data }) => {
 		const response = await fetch(
 			`https://api-cdc.redeem.gov.sg/v1/public/vouchers/groups/${data.id}`,
