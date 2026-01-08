@@ -46,8 +46,25 @@ export function useVoucherLinks() {
 				voucherData = (await getVoucherData({
 					data: { id: voucherId },
 				})) as VoucherData;
-			} catch {
-				throw new Error("Invalid voucher or unable to retrieve voucher data");
+			} catch (error: unknown) {
+				// Handle rate limit errors with user-friendly message
+				if (error && typeof error === "object") {
+					const err = error as {
+						status?: number;
+						statusCode?: number;
+						message?: string;
+					};
+					if (err.status === 429 || err.statusCode === 429) {
+						// Rate limit error - show the user-friendly message from the server
+						throw new Error(
+							err.message ||
+								"You're checking vouchers too quickly. Please wait and try again.",
+						);
+					}
+				}
+				throw new Error(
+					"Unable to load voucher details. Please check your internet connection and try again.",
+				);
 			}
 
 			// 4. Save to localStorage
