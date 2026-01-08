@@ -9,6 +9,7 @@ import {
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { NotFound } from "@/components/NotFound";
 import Header from "../components/Header";
+import Contact from "../components/Contact";
 import appCss from "../styles.css?url";
 
 export const Route = createRootRouteWithContext<{
@@ -66,6 +67,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			<body suppressHydrationWarning>
 				<Header />
 				{children}
+				<Contact />
 				<TanStackDevtools
 					config={{
 						position: "bottom-right",
