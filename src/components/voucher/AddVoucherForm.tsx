@@ -36,7 +36,7 @@ export function AddVoucherForm() {
 				<Input
 					type="text"
 					name="url"
-					placeholder="Enter CDC voucher URL"
+					placeholder="Enter CDC or Climate voucher link"
 					className="flex-1"
 					disabled={addLink.isPending}
 				/>

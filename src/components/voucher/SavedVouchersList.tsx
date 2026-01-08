@@ -59,7 +59,8 @@ export function SavedVouchersList() {
 			) : (
 				<div className="border-l-4 border-foreground bg-muted/50 p-6">
 					<p className="text-sm text-muted-foreground">
-						No saved vouchers yet. Add a CDC voucher link above to get started.
+						No saved vouchers yet. Add a CDC or Climate voucher link above to
+						get started.
 					</p>
 				</div>
 			)}
