@@ -11,13 +11,20 @@ import type {
 export function processVoucherData(data: VoucherData): ProcessedVoucherData {
 	const { campaign, data: voucherData } = data;
 
+	// Determine if this is a climate voucher campaign based on category
+	const isClimateVoucherCampaign = campaign.category === "nea_cfhp";
+
 	// Group vouchers by type
+	// Climate voucher campaigns contain only climate vouchers
+	// CDC voucher campaigns contain heartland and/or supermarket vouchers
 	const heartlandVouchers = voucherData.vouchers.filter(
 		(v) => v.type === "heartland",
 	);
+
 	const supermarketVouchers = voucherData.vouchers.filter(
 		(v) => v.type === "supermarket",
 	);
+	const climateVouchers = isClimateVoucherCampaign ? voucherData.vouchers : [];
 
 	// Process denomination breakdown
 	const processBreakdown = (vouchers: Voucher[]): DenominationBreakdown => {
@@ -46,5 +53,6 @@ export function processVoucherData(data: VoucherData): ProcessedVoucherData {
 		validityEnd: new Date(campaign.validity_end).toLocaleDateString(),
 		heartlandBreakdown: processBreakdown(heartlandVouchers),
 		supermarketBreakdown: processBreakdown(supermarketVouchers),
+		climateBreakdown: processBreakdown(climateVouchers),
 	};
 }
