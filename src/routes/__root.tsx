@@ -24,7 +24,7 @@ export const Route = createRootRouteWithContext<{
 				content: "width=device-width, initial-scale=1",
 			},
 			{
-				title: "CDC Voucher Manager",
+				title: "SG Voucher Manager",
 			},
 		],
 		links: [
