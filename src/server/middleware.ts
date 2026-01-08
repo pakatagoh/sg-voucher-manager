@@ -15,16 +15,12 @@ export const securityHeadersMiddleware = createMiddleware().server(
 		const result = await next();
 
 		// Add comprehensive security headers to the response
-		result.response.headers.set("X-Frame-Options", "DENY");
+		// result.response.headers.set("X-Frame-Options", "DENY");
 		result.response.headers.set("X-Content-Type-Options", "nosniff");
 		result.response.headers.set("X-XSS-Protection", "1; mode=block");
 		result.response.headers.set(
 			"Referrer-Policy",
 			"strict-origin-when-cross-origin",
-		);
-		result.response.headers.set(
-			"Permissions-Policy",
-			"geolocation=(), microphone=(), camera=(), payment=(), usb=(), bluetooth=()",
 		);
 
 		// Content Security Policy - Level 1 with frame-ancestors

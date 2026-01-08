@@ -1,5 +1,5 @@
 import { createStart } from "@tanstack/react-start";
-// import { securityHeadersMiddleware } from "./server/middleware";
+import { securityHeadersMiddleware } from "./server/middleware";
 
 /**
  * TanStack Start Configuration
@@ -14,7 +14,7 @@ import { createStart } from "@tanstack/react-start";
  */
 export const startInstance = createStart(() => {
 	return {
-		requestMiddleware: [],
-		// requestMiddleware: [securityHeadersMiddleware],
+		// requestMiddleware: [],
+		requestMiddleware: [securityHeadersMiddleware],
 	};
 });
