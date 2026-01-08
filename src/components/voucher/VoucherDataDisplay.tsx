@@ -89,6 +89,7 @@ export function VoucherDataDisplay({
 				processedData.supermarketBreakdown,
 				"Supermarket",
 			)}
+			{renderBreakdownSummary(processedData.climateBreakdown, "Climate")}
 		</div>
 	);
 }
