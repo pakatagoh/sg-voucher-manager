@@ -20,6 +20,11 @@ export function VoucherDataDisplay({
 }: VoucherDataDisplayProps) {
 	const processedData = processVoucherData(data);
 
+	// Enhanced URL safety check - defense-in-depth
+	// Validate URL at render time to prevent any bypassed URLs from being clickable
+	const isValidUrl = url.startsWith("https://voucher.redeem.gov.sg/");
+	const safeUrl = isValidUrl ? url : "#";
+
 	const renderBreakdownSummary = (
 		breakdown: DenominationBreakdown,
 		title: string,
@@ -72,14 +77,23 @@ export function VoucherDataDisplay({
 				</Button>
 			</div>
 			<p className="text-sm mb-2">{processedData.description}</p>
-			<a
-				href={url}
-				target="_blank"
-				rel="noopener noreferrer"
-				className="text-sm font-medium text-primary underline hover:text-primary/80 transition-colors break-all block mb-2"
-			>
-				{url}
-			</a>
+			{isValidUrl ? (
+				<a
+					href={safeUrl}
+					target="_blank"
+					rel="noopener noreferrer"
+					className="text-sm font-medium text-primary underline hover:text-primary/80 transition-colors break-all block mb-2"
+				>
+					{url}
+				</a>
+			) : (
+				<span
+					className="text-sm font-medium text-destructive line-through break-all block mb-2 cursor-not-allowed"
+					title="Invalid voucher URL"
+				>
+					{url} (Invalid URL)
+				</span>
+			)}
 			<p className="text-sm mb-4 font-bold">
 				Valid until: {processedData.validityEnd}
 			</p>
