@@ -29,7 +29,7 @@ export const securityHeadersMiddleware = createMiddleware().server(
 			"script-src 'self' 'unsafe-inline' 'unsafe-eval'",
 			"style-src 'self' 'unsafe-inline'",
 			"img-src 'self' data: https:",
-			"connect-src 'self' https://api-cdc.redeem.gov.sg",
+			"connect-src 'self'",
 			"font-src 'self' data:",
 			"frame-ancestors 'none'",
 			"base-uri 'self'",
