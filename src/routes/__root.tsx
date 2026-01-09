@@ -135,7 +135,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			</head>
 			<body suppressHydrationWarning>
 				<Header />
-				{children}
+				<main>{children}</main>
 				<Contact />
 				<TanStackDevtools
 					config={{
