@@ -19,6 +19,10 @@ Sentry.init({
   // Disable tracing completely - only track errors
   tracesSampleRate: 0,
   integrations: [],
+  // Enable metrics aggregator
+  _experiments: {
+    metricsAggregator: true,
+  },
 });
 
 console.log("[Sentry Server] Initialization complete - Error tracking + metrics enabled");

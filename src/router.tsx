@@ -32,7 +32,11 @@ export const getRouter = () => {
 			sendDefaultPii: false,
 			// Disable tracing to prevent request body capture
 			tracesSampleRate: 0,
-			// Empty integrations array for minimal Sentry functionality (error tracking + metrics)
+			// Enable metrics aggregator
+			_experiments: {
+				metricsAggregator: true,
+			},
+			// Keep integrations minimal for client-side
 			integrations: [],
 		});
 
