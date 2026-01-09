@@ -1,4 +1,4 @@
-import { metrics } from "@sentry/tanstackstart-react";
+import * as Sentry from "@sentry/tanstackstart-react";
 import { ClientOnly, createFileRoute } from "@tanstack/react-router";
 import { createMiddleware } from "@tanstack/react-start";
 import PrivacyDisclaimer from "@/components/PrivacyDisclaimer";
@@ -11,14 +11,20 @@ import { SavedVouchersList } from "@/components/voucher/SavedVouchersList";
  */
 const metricsMiddleware = createMiddleware().server(
 	async ({ next, request }) => {
+		console.log("[Metrics] Home route middleware triggered", {
+			method: request.method,
+		});
+
 		try {
 			const result = await next();
 			const statusCode = result.response.status;
 			const status =
 				statusCode >= 200 && statusCode < 400 ? "success" : "error";
 
+			console.log("[Metrics] Tracking page request", { statusCode, status });
+
 			// Track page request with response status
-			metrics.count("page_request_count", 1, {
+			Sentry.metrics.count("page_request_count", 1, {
 				attributes: {
 					route: "/",
 					page: "home",
@@ -30,8 +36,10 @@ const metricsMiddleware = createMiddleware().server(
 
 			return result;
 		} catch (error) {
+			console.error("[Metrics] Error in middleware", error);
+
 			// Track failed request (exception thrown)
-			metrics.count("page_request_count", 1, {
+			Sentry.metrics.count("page_request_count", 1, {
 				attributes: {
 					route: "/",
 					page: "home",

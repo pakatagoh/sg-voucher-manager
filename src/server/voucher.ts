@@ -1,4 +1,4 @@
-import { metrics } from "@sentry/tanstackstart-react";
+import * as Sentry from "@sentry/tanstackstart-react";
 import { createMiddleware, createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
@@ -24,7 +24,7 @@ const sentryMetricsMiddleware = createMiddleware().server(async ({ next }) => {
 		const result = await next();
 
 		// Track successful call
-		metrics.count("rpc_call_count", 1, {
+		Sentry.metrics.count("rpc_call_count", 1, {
 			attributes: {
 				func: "getVoucherData",
 				status: "success",
@@ -34,7 +34,7 @@ const sentryMetricsMiddleware = createMiddleware().server(async ({ next }) => {
 		return result;
 	} catch (error) {
 		// Track failed call
-		metrics.count("rpc_call_count", 1, {
+		Sentry.metrics.count("rpc_call_count", 1, {
 			attributes: {
 				func: "getVoucherData",
 				status: "error",
