@@ -41,7 +41,7 @@ export default function Contact() {
 					</div>
 
 					<div className="mt-8 border-t-2 border-foreground pt-4">
-						<div className="mb-4 space-y-1">
+						<div className="mb-6 space-y-1">
 							<h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-foreground/70 md:text-sm">
 								Privacy & Disclaimer
 							</h3>
@@ -59,7 +59,7 @@ export default function Contact() {
 							SG Voucher Manager
 						</p>
 						<p className="mt-2 text-xs uppercase tracking-wide text-muted-foreground">
-							Created by Pakata Goh
+							A project by Pakata Goh
 						</p>
 					</div>
 				</div>
