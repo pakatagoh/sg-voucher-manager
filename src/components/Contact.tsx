@@ -21,7 +21,7 @@ export default function Contact() {
 		<footer className="bg-background pt-8 pb-8">
 			<div className="mx-auto max-w-7xl px-4 md:px-6">
 				<div className="border-t-4 border-foreground pt-8">
-					<h2 className="mb-6 text-2xl md:text-3xl">Contact</h2>
+					<h2 className="mb-4 text-2xl md:text-3xl">Contact</h2>
 
 					<div className="flex flex-wrap gap-4">
 						{links.map((link) => (
@@ -40,7 +40,21 @@ export default function Contact() {
 						))}
 					</div>
 
-					<div className="mt-12 border-t-2 border-foreground pt-6">
+					<div className="mt-8 border-t-2 border-foreground pt-4">
+						<div className="mb-4 space-y-1">
+							<h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-foreground/70 md:text-sm">
+								Privacy & Disclaimer
+							</h3>
+							<p className="text-xs text-foreground/70">
+								Your information never leaves your device. We just help you
+								retrieve your voucher details - we don't save or track voucher
+								data.
+							</p>
+							<p className="text-xs font-bold uppercase tracking-wide text-foreground/70">
+								Not affiliated with the Singapore Government.
+							</p>
+						</div>
+
 						<p className="text-sm font-bold uppercase tracking-wider">
 							SG Voucher Manager
 						</p>
