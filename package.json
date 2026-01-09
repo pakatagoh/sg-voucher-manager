@@ -3,8 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite dev --port 3000",
-    "build": "vite build",
+    "dev": "NODE_ENV=development NODE_OPTIONS='--import ./instrument.server.mjs' vite dev --port 3000",
+    "start": "node --import ./.output/server/instrument.server.mjs /dist",
+    "build": "vite build && cp instrument.server.mjs /dist",
     "preview": "vite preview",
     "test": "vitest run",
     "format": "biome format",
@@ -13,6 +14,8 @@
   },
   "dependencies": {
     "@radix-ui/react-slot": "^1.2.4",
+    "@sentry/tanstackstart-react": "^10.32.1",
+    "@sentry/vite-plugin": "^4.6.1",
     "@tailwindcss/vite": "^4.0.6",
     "@tanstack/react-devtools": "^0.7.0",
     "@tanstack/react-query": "^5.90.16",

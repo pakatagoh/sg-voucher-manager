@@ -4,10 +4,14 @@ import { tanstackStart } from '@tanstack/react-start/plugin/vite'
 import viteReact from '@vitejs/plugin-react'
 import viteTsConfigPaths from 'vite-tsconfig-paths'
 import tailwindcss from '@tailwindcss/vite'
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 // import { nitro } from 'nitro/vite'
 import netlify from '@netlify/vite-plugin-tanstack-start'
 
 const config = defineConfig({
+  build: {
+    sourcemap: true, // Source map generation must be turned on for sentry vite plugin
+  },
   plugins: [
     devtools(),
     // nitro(),
@@ -19,6 +23,18 @@ const config = defineConfig({
     tailwindcss(),
     tanstackStart(),
     viteReact(),
+    sentryVitePlugin({
+      authToken: process.env.SENTRY_AUTH_TOKEN,
+      org: "personal-kqc",
+      project: "sg-vouchers",
+      sourcemaps: {
+        filesToDeleteAfterUpload: [
+          "./**/*.map",
+          ".*/**/public/**/*.map",
+          "./dist/**/client/**/*.map",
+        ],
+      },
+    }),
   ],
 })
 

@@ -1,3 +1,4 @@
+import { init } from "@sentry/tanstackstart-react";
 import { QueryClient } from "@tanstack/react-query";
 import { createRouter } from "@tanstack/react-router";
 import { setupRouterSsrQueryIntegration } from "@tanstack/react-router-ssr-query";
@@ -23,6 +24,22 @@ export const getRouter = () => {
 		defaultPreloadStaleTime: 0,
 		defaultNotFoundComponent: () => <NotFound />,
 	});
+	if (!router.isServer) {
+		init({
+			dsn: "https://90dbc39bab91395cf00be295035334b7@o4510681070829568.ingest.de.sentry.io/4510681076990032",
+			environment: import.meta.env.VITE_ENVIRONMENT ?? "production",
+			// Disable PII to prevent automatic capture of cookies, IPs, request bodies
+			sendDefaultPii: false,
+			// Disable tracing to prevent request body capture
+			tracesSampleRate: 0,
+			// Enable metrics aggregation
+			_experiments: {
+				metricsAggregator: true,
+			},
+			// Empty integrations array for minimal Sentry functionality (error tracking + metrics)
+			integrations: [],
+		});
+	}
 
 	setupRouterSsrQueryIntegration({ router, queryClient });
 
