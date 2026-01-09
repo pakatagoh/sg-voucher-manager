@@ -15,45 +15,111 @@ import appCss from "../styles.css?url";
 export const Route = createRootRouteWithContext<{
 	queryClient: QueryClient;
 }>()({
-	head: () => ({
-		meta: [
-			{
-				charSet: "utf-8",
-			},
-			{
-				name: "viewport",
-				content: "width=device-width, initial-scale=1",
-			},
-			{
-				title: "SG Voucher Manager",
-			},
-		],
-		links: [
-			{
-				rel: "stylesheet",
-				href: appCss,
-			},
-			{
-				rel: "apple-touch-icon",
-				href: "/apple-touch-icon.png",
-				sizes: "180x180",
-			},
-			{
-				rel: "icon",
-				href: "/favicon-32x32.png",
-				sizes: "32x32",
-			},
-			{
-				rel: "icon",
-				href: "/favicon-16x16.png",
-				sizes: "16x16",
-			},
-			{
-				rel: "manifest",
-				href: "/site.webmanifest",
-			},
-		],
-	}),
+	head: () => {
+		const baseUrl =
+			import.meta.env.MODE === "production"
+				? "https://sg-voucher-manager.vercel.app"
+				: "http://localhost:3000";
+
+		return {
+			meta: [
+				{
+					charSet: "utf-8",
+				},
+				{
+					name: "viewport",
+					content: "width=device-width, initial-scale=1",
+				},
+				{
+					title: "SG Voucher Manager",
+				},
+				// SEO Meta Tags
+				{
+					name: "description",
+					content: "Manage your Singapore vouchers easily",
+				},
+				// Open Graph / Facebook
+				{
+					property: "og:type",
+					content: "website",
+				},
+				{
+					property: "og:url",
+					content: baseUrl,
+				},
+				{
+					property: "og:title",
+					content: "SG Voucher Manager",
+				},
+				{
+					property: "og:description",
+					content: "Manage your Singapore vouchers easily",
+				},
+				{
+					property: "og:image",
+					content: `${baseUrl}/og-image.png`,
+				},
+				{
+					property: "og:image:width",
+					content: "1200",
+				},
+				{
+					property: "og:image:height",
+					content: "630",
+				},
+				{
+					property: "og:site_name",
+					content: "SG Voucher Manager",
+				},
+				// Twitter
+				{
+					name: "twitter:card",
+					content: "summary_large_image",
+				},
+				{
+					name: "twitter:url",
+					content: baseUrl,
+				},
+				{
+					name: "twitter:title",
+					content: "SG Voucher Manager",
+				},
+				{
+					name: "twitter:description",
+					content: "Manage your Singapore vouchers easily",
+				},
+				{
+					name: "twitter:image",
+					content: `${baseUrl}/og-image.png`,
+				},
+			],
+			links: [
+				{
+					rel: "stylesheet",
+					href: appCss,
+				},
+				{
+					rel: "apple-touch-icon",
+					href: "/apple-touch-icon.png",
+					sizes: "180x180",
+				},
+				{
+					rel: "icon",
+					href: "/favicon-32x32.png",
+					sizes: "32x32",
+				},
+				{
+					rel: "icon",
+					href: "/favicon-16x16.png",
+					sizes: "16x16",
+				},
+				{
+					rel: "manifest",
+					href: "/site.webmanifest",
+				},
+			],
+		};
+	},
 	shellComponent: RootDocument,
 	notFoundComponent: () => <NotFound />,
 });
