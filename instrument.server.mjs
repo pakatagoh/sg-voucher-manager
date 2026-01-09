@@ -18,13 +18,24 @@ Sentry.init({
   sendDefaultPii: false,
   // Disable tracing completely - only track errors
   tracesSampleRate: 0,
-  // Enable metrics aggregation
-  _experiments: {
-    metricsAggregator: true,
-  },
   integrations: [],
 });
 
 console.log("[Sentry Server] Initialization complete - Error tracking + metrics enabled");
+console.log("[Sentry Server] Sentry.metrics available:", typeof Sentry.metrics);
+
+// Test metric on startup to verify it's working
+try {
+  Sentry.metrics.count("sentry_init_test", 1, {
+    attributes: {
+      environment,
+      type: "server_startup",
+    },
+  });
+  console.log("[Sentry Server] Test metric sent successfully");
+} catch (error) {
+  console.error("[Sentry Server] Failed to send test metric:", error);
+}
+
 
 

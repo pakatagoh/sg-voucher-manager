@@ -32,13 +32,18 @@ export const getRouter = () => {
 			sendDefaultPii: false,
 			// Disable tracing to prevent request body capture
 			tracesSampleRate: 0,
-			// Enable metrics aggregation
-			_experiments: {
-				metricsAggregator: true,
-			},
 			// Empty integrations array for minimal Sentry functionality (error tracking + metrics)
 			integrations: [],
 		});
+
+		console.log(
+			"[Sentry Client] Initialized with environment:",
+			import.meta.env.VITE_ENVIRONMENT,
+		);
+		console.log(
+			"[Sentry Client] Sentry.metrics available:",
+			typeof Sentry.metrics,
+		);
 	}
 
 	setupRouterSsrQueryIntegration({ router, queryClient });
