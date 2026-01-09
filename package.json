@@ -1,5 +1,5 @@
 {
-  "name": "manage-cdc",
+  "name": "sg-voucher-manager",
   "private": true,
   "type": "module",
   "scripts": {
@@ -34,6 +34,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
+    "@netlify/vite-plugin-tanstack-start": "^1.2.6",
     "@tanstack/devtools-vite": "^0.3.11",
     "@tanstack/react-query-devtools": "^5.91.2",
     "@testing-library/dom": "^10.4.0",
