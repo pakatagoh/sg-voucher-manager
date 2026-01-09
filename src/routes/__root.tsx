@@ -9,7 +9,7 @@ import {
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { NotFound } from "@/components/NotFound";
 import Header from "../components/Header";
-import Contact from "../components/Contact";
+import Footer from "../components/Footer";
 import appCss from "../styles.css?url";
 
 // Initialize Sentry on server side before anything else
@@ -136,7 +136,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			<body suppressHydrationWarning>
 				<Header />
 				<main>{children}</main>
-				<Contact />
+				<Footer />
 				<TanStackDevtools
 					config={{
 						position: "bottom-right",
