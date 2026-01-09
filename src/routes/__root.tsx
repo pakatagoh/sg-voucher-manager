@@ -12,6 +12,9 @@ import Header from "../components/Header";
 import Contact from "../components/Contact";
 import appCss from "../styles.css?url";
 
+// Initialize Sentry on server side before anything else
+import "../server/sentry.js";
+
 export const Route = createRootRouteWithContext<{
 	queryClient: QueryClient;
 }>()({

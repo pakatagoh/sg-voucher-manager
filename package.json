@@ -3,9 +3,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "NODE_ENV=development NODE_OPTIONS='--import ./instrument.server.mjs' vite dev --port 3000",
-    "start": "node --import ./dist/server/instrument.server.mjs dist/server/server.js",
-    "build": "vite build && cp instrument.server.mjs dist/server/",
+    "dev": "NODE_ENV=development vite dev --port 3000",
+    "start": "node dist/server/server.js",
+    "build": "vite build",
     "preview": "vite preview",
     "test": "vitest run",
     "format": "biome format",
