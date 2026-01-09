@@ -11,8 +11,15 @@ import { SavedVouchersList } from "@/components/voucher/SavedVouchersList";
  */
 const metricsMiddleware = createMiddleware().server(
 	async ({ next, request }) => {
-		console.log("[Metrics] Home route middleware triggered", {
+		console.log("[Metrics - Home] Home route middleware triggered", {
 			method: request.method,
+		});
+
+		console.log("[Metrics - Home] Environment Variables:", {
+			ENVIRONMENT: process.env.ENVIRONMENT,
+			NODE_ENV: process.env.NODE_ENV,
+			VITE_ENVIRONMENT: process.env.VITE_ENVIRONMENT,
+			sentryMetricsAvailable: typeof Sentry.metrics !== "undefined",
 		});
 
 		try {
@@ -21,7 +28,10 @@ const metricsMiddleware = createMiddleware().server(
 			const status =
 				statusCode >= 200 && statusCode < 400 ? "success" : "error";
 
-			console.log("[Metrics] Tracking page request", { statusCode, status });
+			console.log("[Metrics - Home] Tracking page request", {
+				statusCode,
+				status,
+			});
 
 			// Track page request with response status
 			Sentry.metrics.count("page_request_count", 1, {
@@ -34,9 +44,13 @@ const metricsMiddleware = createMiddleware().server(
 				},
 			});
 
+			console.log("[Metrics - Home] Successfully emitted page_request_count");
+
 			return result;
 		} catch (error) {
-			console.error("[Metrics] Error in middleware", error);
+			console.error("[Metrics - Home] Error in middleware", error);
+
+			console.log("[Metrics - Home] Emitting page_request_count (error)");
 
 			// Track failed request (exception thrown)
 			Sentry.metrics.count("page_request_count", 1, {
@@ -48,6 +62,10 @@ const metricsMiddleware = createMiddleware().server(
 					status: "error",
 				},
 			});
+
+			console.log(
+				"[Metrics - Home] Successfully emitted page_request_count (error)",
+			);
 
 			throw error;
 		}
