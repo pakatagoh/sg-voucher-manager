@@ -39,15 +39,6 @@ export const getRouter = () => {
 			// Keep integrations minimal for client-side
 			integrations: [],
 		});
-
-		console.log(
-			"[Sentry Client] Initialized with environment:",
-			import.meta.env.VITE_ENVIRONMENT,
-		);
-		console.log(
-			"[Sentry Client] Sentry.metrics available:",
-			typeof Sentry.metrics,
-		);
 	}
 
 	setupRouterSsrQueryIntegration({ router, queryClient });

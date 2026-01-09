@@ -20,22 +20,8 @@ const voucherIdSchema = z.object({
  * Tracks server function calls with success/error status
  */
 const sentryMetricsMiddleware = createMiddleware().server(async ({ next }) => {
-	console.log("[Metrics - Voucher] Environment Variables:", {
-		ENVIRONMENT: process.env.ENVIRONMENT,
-		NODE_ENV: process.env.NODE_ENV,
-		VITE_ENVIRONMENT: process.env.VITE_ENVIRONMENT,
-		sentryMetricsAvailable: typeof Sentry.metrics !== "undefined",
-		sentryMetricsCount: typeof Sentry.metrics?.count,
-	});
-
 	try {
 		const result = await next();
-
-		console.log("[Metrics - Voucher] Emitting rpc_call_count (success)", {
-			func: "getVoucherData",
-			status: "success",
-			environment: process.env.ENVIRONMENT,
-		});
 
 		// Track successful call
 		Sentry.metrics.count("rpc_call_count", 1, {
@@ -45,18 +31,8 @@ const sentryMetricsMiddleware = createMiddleware().server(async ({ next }) => {
 			},
 		});
 
-		console.log(
-			"[Metrics - Voucher] Successfully emitted rpc_call_count (success)",
-		);
-
 		return result;
 	} catch (error) {
-		console.log("[Metrics - Voucher] Emitting rpc_call_count (error)", {
-			func: "getVoucherData",
-			status: "error",
-			environment: process.env.ENVIRONMENT,
-		});
-
 		// Track failed call
 		Sentry.metrics.count("rpc_call_count", 1, {
 			attributes: {
@@ -64,10 +40,6 @@ const sentryMetricsMiddleware = createMiddleware().server(async ({ next }) => {
 				status: "error",
 			},
 		});
-
-		console.log(
-			"[Metrics - Voucher] Successfully emitted rpc_call_count (error)",
-		);
 
 		throw error;
 	}
