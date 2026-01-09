@@ -18,9 +18,9 @@ export default function Contact() {
 	];
 
 	return (
-		<footer className="mt-8 bg-background pt-12 pb-8">
+		<footer className="bg-background pt-8 pb-8">
 			<div className="mx-auto max-w-7xl px-4 md:px-6">
-				<div className="border-t-4 border-foreground pt-12">
+				<div className="border-t-4 border-foreground pt-8">
 					<h2 className="mb-6 text-2xl md:text-3xl">Contact</h2>
 
 					<div className="flex flex-wrap gap-4">
@@ -43,6 +43,9 @@ export default function Contact() {
 					<div className="mt-12 border-t-2 border-foreground pt-6">
 						<p className="text-sm font-bold uppercase tracking-wider">
 							SG Voucher Manager
+						</p>
+						<p className="mt-2 text-xs uppercase tracking-wide text-muted-foreground">
+							Created by Pakata Goh
 						</p>
 					</div>
 				</div>

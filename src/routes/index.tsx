@@ -1,7 +1,6 @@
 import * as Sentry from "@sentry/tanstackstart-react";
 import { ClientOnly, createFileRoute } from "@tanstack/react-router";
 import { createMiddleware } from "@tanstack/react-start";
-import PrivacyDisclaimer from "@/components/PrivacyDisclaimer";
 import { AddVoucherForm } from "@/components/voucher/AddVoucherForm";
 import { SavedVouchersList } from "@/components/voucher/SavedVouchersList";
 
@@ -55,8 +54,7 @@ export const Route = createFileRoute("/")({
 
 function App() {
 	return (
-		<div className="mx-auto max-w-7xl px-4 py-8 md:px-6">
-			<PrivacyDisclaimer />
+		<div className="mx-auto max-w-7xl px-4 py-8 pb-12 md:px-6">
 			<AddVoucherForm />
 			<ClientOnly>
 				<SavedVouchersList />

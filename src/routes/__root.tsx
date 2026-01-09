@@ -10,6 +10,7 @@ import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { NotFound } from "@/components/NotFound";
 import Header from "../components/Header";
 import Contact from "../components/Contact";
+import PrivacyDisclaimer from "../components/PrivacyDisclaimer";
 import appCss from "../styles.css?url";
 
 // Initialize Sentry on server side before anything else
@@ -136,6 +137,9 @@ function RootDocument({ children }: { children: React.ReactNode }) {
 			<body suppressHydrationWarning>
 				<Header />
 				{children}
+				<div className="mx-auto max-w-7xl px-4 md:px-6">
+					<PrivacyDisclaimer />
+				</div>
 				<Contact />
 				<TanStackDevtools
 					config={{
