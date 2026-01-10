@@ -9,6 +9,7 @@ interface VoucherDataDisplayProps {
 	onDelete: (id: string) => void;
 	isDeleting: boolean;
 	id: string;
+	error: Error | null;
 }
 
 export function VoucherDataDisplay({
@@ -17,6 +18,7 @@ export function VoucherDataDisplay({
 	onDelete,
 	isDeleting,
 	id,
+	error,
 }: VoucherDataDisplayProps) {
 	const processedData = processVoucherData(data);
 
@@ -104,6 +106,16 @@ export function VoucherDataDisplay({
 				"Supermarket",
 			)}
 			{renderBreakdownSummary(processedData.climateBreakdown, "Climate")}
+
+			{error && (
+				<div className="border-l-4 border-destructive pl-4 mt-4">
+					<p className="text-sm text-destructive mb-1">
+						<span className="font-bold uppercase text-xs">Error:</span>{" "}
+						{error?.message}
+					</p>
+					<p className="text-xs">Try refreshing to fetch the latest data.</p>
+				</div>
+			)}
 		</div>
 	);
 }

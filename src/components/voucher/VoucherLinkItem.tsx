@@ -28,13 +28,6 @@ export function VoucherLinkItem({
 
 	return (
 		<li className="bg-background mb-8">
-			{isError && (
-				<div className="border-2 border-destructive bg-muted p-4 mb-4">
-					<p className="font-bold uppercase text-sm mb-1">Error</p>
-					<p className="text-sm">{(error as Error).message}</p>
-				</div>
-			)}
-
 			{voucherData && (
 				<VoucherDataDisplay
 					data={voucherData}
@@ -42,6 +35,7 @@ export function VoucherLinkItem({
 					onDelete={onDelete}
 					isDeleting={isDeleting}
 					id={id}
+					error={isError ? error : undefined}
 				/>
 			)}
 
