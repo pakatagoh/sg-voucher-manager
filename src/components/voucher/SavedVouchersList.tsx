@@ -35,8 +35,8 @@ export function SavedVouchersList() {
 						strokeWidth={1}
 					/>
 					<p className="text-sm text-muted-foreground">
-						No saved vouchers yet. Add a CDC or Climate voucher link above to
-						get started.
+						No saved vouchers yet. Add a CDC or Climate voucher link to get
+						started.
 					</p>
 				</div>
 			)}
