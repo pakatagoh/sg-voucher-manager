@@ -18,7 +18,7 @@ if (typeof window === "undefined") {
 	);
 
 	Sentry.init({
-		dsn: "https://90dbc39bab91395cf00be295035334b7@o4510681070829568.ingest.de.sentry.io/4510681076990032",
+		dsn: process.env.VITE_SENTRY_DSN,
 		environment,
 		// Use the release injected by Sentry Vite plugin during build
 		release: process.env.SENTRY_RELEASE,
