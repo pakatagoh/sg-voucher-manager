@@ -65,7 +65,7 @@ export const securityHeadersMiddleware = createMiddleware().server(
 export const rateLimitMiddleware = createMiddleware().server(
 	async ({ next, request }) => {
 		// Skip rate limiting in development
-		if (process.env.NODE_ENV !== "production") {
+		if (process.env.VITE_ENVIRONMENT === "development") {
 			return next();
 		}
 

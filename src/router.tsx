@@ -25,19 +25,21 @@ export const getRouter = () => {
 		defaultNotFoundComponent: () => <NotFound />,
 	});
 	if (!router.isServer) {
+		const env = import.meta.env.VITE_ENVIRONMENT ?? "production";
+		const isDevelopment = env === "development";
+
 		Sentry.init({
-			dsn: "https://90dbc39bab91395cf00be295035334b7@o4510681070829568.ingest.de.sentry.io/4510681076990032",
-			environment: import.meta.env.VITE_ENVIRONMENT ?? "production",
+			dsn: import.meta.env.VITE_SENTRY_DSN,
+			environment: env,
+			// Use the release injected by Vite at build time
+			release: import.meta.env.VITE_SENTRY_RELEASE,
+
 			// Disable PII to prevent automatic capture of cookies, IPs, request bodies
 			sendDefaultPii: false,
 			// Disable tracing to prevent request body capture
 			tracesSampleRate: 0,
-			// Enable metrics aggregator
-			_experiments: {
-				metricsAggregator: true,
-			},
-			// Keep integrations minimal for client-side
-			integrations: [],
+			sampleRate: isDevelopment ? 1.0 : 0.5,
+			allowUrls: isDevelopment ? [] : [/^https:\/\/managevoucher\.sg\/.*/],
 		});
 	}
 

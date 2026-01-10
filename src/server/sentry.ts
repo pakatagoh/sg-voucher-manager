@@ -2,15 +2,16 @@ import * as Sentry from "@sentry/tanstackstart-react";
 
 // Only initialize on server side
 if (typeof window === "undefined") {
-	// Determine environment - prioritize NODE_ENV which Vite sets automatically
-	const isDevelopment = process.env.NODE_ENV === "development";
 	// Server-side: Use ENVIRONMENT (set in Netlify)
+	const isDevelopment = process.env.VITE_ENVIRONMENT === "development";
 	// Client-side uses VITE_ENVIRONMENT (bundled by Vite)
 	const environment =
-		process.env.ENVIRONMENT ?? (isDevelopment ? "development" : "production");
+		process.env.VITE_ENVIRONMENT ??
+		(isDevelopment ? "development" : "production");
 
-	console.log(`[Sentry Server] NODE_ENV: ${process.env.NODE_ENV}`);
-	console.log(`[Sentry Server] ENVIRONMENT: ${process.env.ENVIRONMENT}`);
+	console.log(
+		`[Sentry Server] VITE_ENVIRONMENT: ${process.env.VITE_ENVIRONMENT}`,
+	);
 	console.log(`[Sentry Server] Initializing with environment: ${environment}`);
 	console.log(
 		`[Sentry Server] Error tracking + metrics enabled - tracing disabled`,
@@ -19,6 +20,8 @@ if (typeof window === "undefined") {
 	Sentry.init({
 		dsn: "https://90dbc39bab91395cf00be295035334b7@o4510681070829568.ingest.de.sentry.io/4510681076990032",
 		environment,
+		// Use the release injected by Sentry Vite plugin during build
+		release: process.env.SENTRY_RELEASE,
 		// Disable PII to prevent request bodies from being captured
 		sendDefaultPii: false,
 		// Disable tracing completely - only track errors
@@ -28,7 +31,7 @@ if (typeof window === "undefined") {
 			metricsAggregator: true,
 		},
 		// Keep integrations minimal but include what's needed for basic functionality
-		integrations: [Sentry.httpIntegration()],
+		integrations: [],
 	});
 
 	console.log(

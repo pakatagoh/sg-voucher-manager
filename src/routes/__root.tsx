@@ -8,8 +8,8 @@ import {
 } from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { NotFound } from "@/components/NotFound";
-import Header from "../components/Header";
 import Footer from "../components/Footer";
+import Header from "../components/Header";
 import appCss from "../styles.css?url";
 
 // Initialize Sentry on server side before anything else
@@ -19,10 +19,8 @@ export const Route = createRootRouteWithContext<{
 	queryClient: QueryClient;
 }>()({
 	head: () => {
-		const baseUrl =
-			import.meta.env.MODE === "production"
-				? "https://sg-voucher-manager.vercel.app"
-				: "http://localhost:3000";
+		const baseUrl = import.meta.env.VITE_APP_URL ?? "";
+		const isProduction = import.meta.env.VITE_ENVIRONMENT === "production";
 
 		return {
 			meta: [
@@ -41,6 +39,15 @@ export const Route = createRootRouteWithContext<{
 					name: "description",
 					content: "Manage your Singapore vouchers easily",
 				},
+				// Prevent indexing in non-production environments
+				...(!isProduction
+					? [
+							{
+								name: "robots",
+								content: "noindex, nofollow",
+							},
+						]
+					: []),
 				// Open Graph / Facebook
 				{
 					property: "og:type",
@@ -118,7 +125,11 @@ export const Route = createRootRouteWithContext<{
 				},
 				{
 					rel: "manifest",
-					href: "/site.webmanifest",
+					href: "/manifest.json",
+				},
+				{
+					rel: "canonical",
+					href: baseUrl,
 				},
 			],
 		};
