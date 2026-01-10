@@ -16,6 +16,9 @@ if (typeof window === "undefined") {
 	console.log(
 		`[Sentry Server] Error tracking + metrics enabled - tracing disabled`,
 	);
+	console.log(
+		`[Sentry Server] VITE_SENTRY_DSN: ${process.env.VITE_SENTRY_DSN}`,
+	);
 
 	Sentry.init({
 		dsn: process.env.VITE_SENTRY_DSN,
