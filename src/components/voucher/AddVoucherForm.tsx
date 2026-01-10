@@ -25,26 +25,28 @@ export function AddVoucherForm() {
 	};
 
 	return (
-		<section className="mb-8">
-			<h2 className="mb-4 text-xl md:text-2xl">Add Voucher</h2>
-
+		<div className="mb-8">
 			<form
 				ref={formRef}
 				onSubmit={handleSubmit}
-				className="flex flex-col md:flex-row gap-2"
+				className="flex flex-wrap items-center gap-2"
 			>
+				<label htmlFor="voucher-url" className="sr-only">
+					Voucher Link
+				</label>
 				<Input
+					id="voucher-url"
 					type="text"
 					name="url"
 					placeholder="Enter CDC or Climate voucher link"
-					className="flex-1"
 					disabled={addLink.isPending}
+					className="h-11 w-full md:flex-1"
 				/>
 				<Button
 					type="submit"
 					variant="default"
 					disabled={addLink.isPending}
-					className="md:w-auto"
+					className="h-11 px-6 w-full md:w-auto"
 					aria-label={addLink.isPending ? "Adding voucher" : "Add voucher"}
 				>
 					{addLink.isPending ? <Spinner /> : "Add"}
@@ -52,11 +54,13 @@ export function AddVoucherForm() {
 			</form>
 
 			{addLink.isError && (
-				<div className="border-2 border-destructive bg-muted p-4 mt-4">
-					<p className="font-bold uppercase text-sm mb-1">Error</p>
+				<div className="border-2 border-destructive bg-muted p-3 mt-2">
+					<p className="font-bold uppercase text-xs tracking-wide mb-1">
+						Error
+					</p>
 					<p className="text-sm">{addLink.error.message}</p>
 				</div>
 			)}
-		</section>
+		</div>
 	);
 }
