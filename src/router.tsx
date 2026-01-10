@@ -12,6 +12,7 @@ export const getRouter = () => {
 		defaultOptions: {
 			queries: {
 				retry: false,
+				refetchOnWindowFocus: false,
 			},
 		},
 	});
