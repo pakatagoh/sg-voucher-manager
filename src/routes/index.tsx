@@ -54,7 +54,7 @@ export const Route = createFileRoute("/")({
 
 function App() {
 	return (
-		<div className="mx-auto max-w-7xl px-4 py-8 pb-8 md:px-6">
+		<div className="mx-auto max-w-7xl px-4 pt-4 md:px-6">
 			<AddVoucherForm />
 			<ClientOnly>
 				<SavedVouchersList />
