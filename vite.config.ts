@@ -12,6 +12,10 @@ const config = defineConfig({
   build: {
     sourcemap: true, // Source map generation must be turned on for sentry vite plugin
   },
+  define: {
+    // Inject SENTRY_RELEASE as a compile-time constant for client-side code
+    'import.meta.env.VITE_SENTRY_RELEASE': JSON.stringify(process.env.SENTRY_RELEASE || 'development'),
+  },
   plugins: [
     devtools(),
     // nitro(),
@@ -27,6 +31,9 @@ const config = defineConfig({
       authToken: process.env.SENTRY_AUTH_TOKEN,
       org: "personal-kqc",
       project: "sg-vouchers",
+      release: {
+        name: process.env.SENTRY_RELEASE, // Will be set during build
+      },
       sourcemaps: {
         filesToDeleteAfterUpload: [
           "./**/*.map",
