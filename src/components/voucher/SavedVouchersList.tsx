@@ -1,4 +1,5 @@
 import { useQueries } from "@tanstack/react-query";
+import * as Sentry from "@sentry/tanstackstart-react";
 import { Spinner } from "@/components/ui/spinner";
 import { useVoucherLinks } from "@/hooks/useVoucherLinks";
 import { getVoucherData } from "@/server/voucher";
@@ -12,15 +13,28 @@ export function SavedVouchersList() {
 		deleteLink.mutate(id);
 	};
 
-	// Check if any vouchers are in initial loading state (no data yet)
+	// Reverse links once for display order (newest first)
+	const reversedLinks = [...links].reverse();
+
+	// Fetch voucher data for all saved links in display order
 	const voucherQueries = useQueries({
-		queries: links.map((link) => ({
+		queries: reversedLinks.map((link) => ({
 			queryKey: ["voucherData", link.voucherId],
 			queryFn: async () => {
-				const result = await getVoucherData({ data: { id: link.voucherId } });
-				return result as VoucherData;
+				try {
+					const result = await getVoucherData({ data: { id: link.voucherId } });
+					return result as VoucherData;
+				} catch (error) {
+					Sentry.captureException(error);
+					throw error;
+				}
 			},
 			staleTime: 0,
+			retry: false,
+			retryOnMount: false,
+			refetchOnWindowFocus: false,
+			refetchOnMount: false,
+			refetchOnReconnect: false,
 		})),
 	});
 
@@ -43,18 +57,27 @@ export function SavedVouchersList() {
 				<div className="flex justify-center items-center p-8">
 					<Spinner />
 				</div>
-			) : links.length > 0 ? (
+			) : reversedLinks.length > 0 ? (
 				<ul>
-					{[...links].reverse().map((link) => (
-						<VoucherLinkItem
-							key={link.id}
-							id={link.id}
-							voucherId={link.voucherId}
-							url={link.url}
-							onDelete={handleDelete}
-							isDeleting={deleteLink.isPending}
-						/>
-					))}
+					{reversedLinks.map((link, index) => {
+						const query = voucherQueries[index];
+
+						return (
+							<VoucherLinkItem
+								key={link.id}
+								id={link.id}
+								voucherId={link.voucherId}
+								url={link.url}
+								voucherData={query.data}
+								isLoading={query.isLoading}
+								isFetching={query.isFetching}
+								error={query.error}
+								refetch={query.refetch}
+								onDelete={handleDelete}
+								isDeleting={deleteLink.isPending}
+							/>
+						);
+					})}
 				</ul>
 			) : (
 				<div className="border-l-4 border-foreground bg-muted/50 p-6">
