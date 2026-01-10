@@ -45,7 +45,7 @@ export function SavedVouchersList() {
 				</div>
 			) : links.length > 0 ? (
 				<ul>
-					{links.map((link) => (
+					{[...links].reverse().map((link) => (
 						<VoucherLinkItem
 							key={link.id}
 							id={link.id}
