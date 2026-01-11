@@ -125,7 +125,7 @@ export const Route = createRootRouteWithContext<{
 				},
 				{
 					rel: "manifest",
-					href: "/manifest.json",
+					href: "/manifest.webmanifest",
 				},
 				{
 					rel: "canonical",
