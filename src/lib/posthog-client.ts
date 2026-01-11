@@ -71,11 +71,6 @@ export function initPostHog() {
 				if (captureResult?.properties) {
 					// Sanitize external click URLs to remove sensitive voucher IDs
 					sanitizeUrlProperty(captureResult.properties, "$external_click_url");
-
-					if (captureResult.properties.$last_external_click_url) {
-						console.log("THE EVENT: ", captureResult.event);
-					}
-
 					sanitizeUrlProperty(
 						captureResult.properties,
 						"$last_external_click_url",
