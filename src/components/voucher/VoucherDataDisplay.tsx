@@ -71,7 +71,7 @@ export function VoucherDataDisplay({
 					size="icon-sm"
 					onClick={() => onDelete(id)}
 					disabled={isDeleting}
-					className="border-2 border-foreground bg-background hover:bg-background hover:border-destructive"
+					className="border-2 border-foreground bg-background hover:bg-background hover:border-destructive focus-visible:ring-destructive"
 					aria-label={isDeleting ? "Deleting voucher" : "Delete voucher"}
 					title={isDeleting ? "Deleting..." : "Delete voucher"}
 				>
