@@ -1,4 +1,5 @@
 // Client-side localStorage management for voucher links
+import * as Sentry from "@sentry/tanstackstart-react";
 import { createClientOnlyFn } from "@tanstack/react-start";
 
 const STORAGE_KEY = "voucher-links";
@@ -19,7 +20,7 @@ export const getVoucherLinks = createClientOnlyFn((): VoucherLink[] => {
 		if (!stored) return [];
 		return JSON.parse(stored) as VoucherLink[];
 	} catch (error) {
-		console.error("Error reading voucher links from localStorage:", error);
+		Sentry.captureException(error);
 		return [];
 	}
 });
@@ -34,13 +35,18 @@ export const addVoucherLink = createClientOnlyFn(
 	): {
 		success: boolean;
 		message: string;
+		exceptionType: string;
 	} => {
 		try {
 			const links = getVoucherLinks();
 
 			// Check if voucher ID already exists
 			if (links.some((link) => link.voucherId === voucherId)) {
-				return { success: false, message: "Voucher already exists" };
+				return {
+					success: false,
+					message: "Voucher already exists",
+					exceptionType: "duplicate_voucher",
+				};
 			}
 
 			// Generate a simple storage ID (timestamp + random string)
@@ -56,10 +62,18 @@ export const addVoucherLink = createClientOnlyFn(
 			links.push(newLink);
 			localStorage.setItem(STORAGE_KEY, JSON.stringify(links));
 
-			return { success: true, message: "Voucher added successfully" };
+			return {
+				success: true,
+				message: "Voucher added successfully",
+				exceptionType: "",
+			};
 		} catch (error) {
-			console.error("Error adding voucher link to localStorage:", error);
-			return { success: false, message: "Failed to add voucher" };
+			Sentry.captureException(error);
+			return {
+				success: false,
+				message: "Failed to add voucher",
+				exceptionType: "storage_error",
+			};
 		}
 	},
 );
@@ -73,20 +87,33 @@ export const deleteVoucherLink = createClientOnlyFn(
 	): {
 		success: boolean;
 		message: string;
+		exceptionType: string;
 	} => {
 		try {
 			const links = getVoucherLinks();
 			const filteredLinks = links.filter((link) => link.id !== id);
 
 			if (filteredLinks.length === links.length) {
-				return { success: false, message: "Voucher not found" };
+				return {
+					success: false,
+					message: "Voucher not found",
+					exceptionType: "voucher_not_found",
+				};
 			}
 
 			localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredLinks));
-			return { success: true, message: "Voucher deleted successfully" };
+			return {
+				success: true,
+				message: "Voucher deleted successfully",
+				exceptionType: "",
+			};
 		} catch (error) {
-			console.error("Error deleting voucher link from localStorage:", error);
-			return { success: false, message: "Failed to delete voucher" };
+			Sentry.captureException(error);
+			return {
+				success: false,
+				message: "Failed to delete voucher",
+				exceptionType: "storage_error",
+			};
 		}
 	},
 );
