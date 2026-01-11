@@ -18,7 +18,8 @@ const config = defineConfig({
 		),
 	},
 	plugins: [
-		devtools(),
+		// Only enable devtools in development
+		...(process.env.NODE_ENV === "development" ? [devtools()] : []),
 		// nitro(),
 		netlify(),
 		// this is the plugin that enables path aliases
