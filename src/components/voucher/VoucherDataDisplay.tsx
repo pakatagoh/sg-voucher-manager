@@ -1,6 +1,8 @@
+import * as Sentry from "@sentry/tanstackstart-react";
 import { X } from "lucide-react";
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { posthog } from "@/lib/posthog-client";
+import { captureEvent } from "@/lib/posthog-client";
 import type { VoucherLink } from "@/lib/voucherStorage";
 import { processVoucherData } from "@/lib/voucherUtils";
 import type { DenominationBreakdown, VoucherData } from "@/types/voucher";
@@ -30,11 +32,23 @@ export function VoucherDataDisplay({
 	const safeUrl = isValidUrl ? link.url : "#";
 
 	const handleDelete = () => {
-		posthog.capture("voucher_delete_click", {
+		captureEvent("voucher_delete_click", {
 			display_type: "full_data_display",
 		});
 		onDelete(link.id);
 	};
+
+	const handleLinkClick = () => {
+		captureEvent("voucher_link_click", {
+			display_type: "full_data_display",
+		});
+	};
+
+	useEffect(() => {
+		if (!isValidUrl) {
+			Sentry.captureException(new Error(`invalid URL rendered: ${link.url}`));
+		}
+	}, [isValidUrl, link.url]);
 
 	const renderBreakdownSummary = (
 		breakdown: DenominationBreakdown,
@@ -90,6 +104,7 @@ export function VoucherDataDisplay({
 			<p className="text-sm mb-2">{processedData.description}</p>
 			{isValidUrl ? (
 				<a
+					onClick={handleLinkClick}
 					href={safeUrl}
 					target="_blank"
 					rel="noopener noreferrer"

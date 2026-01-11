@@ -4,14 +4,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useVoucherLinks } from "@/hooks/useVoucherLinks";
-import { posthog } from "@/lib/posthog-client";
+import { captureEvent } from "@/lib/posthog-client";
 
 export function AddVoucherForm() {
 	const formRef = useRef<HTMLFormElement>(null);
 	const { addLink } = useVoucherLinks();
 
 	const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-		posthog.capture("submit_voucher_form");
+		captureEvent("submit_voucher_form");
 		e.preventDefault();
 		const formData = new FormData(e.currentTarget);
 		const url = formData.get("url") as string;

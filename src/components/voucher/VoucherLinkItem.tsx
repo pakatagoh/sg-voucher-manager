@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useDelayedLoading } from "@/hooks/useDelayedLoading";
 import { useVoucherData } from "@/hooks/useVoucherData";
-import { posthog } from "@/lib/posthog-client";
+import { captureEvent } from "@/lib/posthog-client";
 import type { VoucherLink } from "@/lib/voucherStorage";
 import { VoucherDataDisplay } from "./VoucherDataDisplay";
 import { VoucherEmptyDataDisplay } from "./VoucherEmptyDatalDisplay";
@@ -32,7 +32,7 @@ export function VoucherLinkItem({
 	const isShowSpinner = useDelayedLoading(isLoading);
 
 	const handleRefresh = () => {
-		posthog.capture("refresh_click", {
+		captureEvent("refresh_click", {
 			display_type: voucherData ? "full_data_display" : "empty_data_display",
 		});
 		refetch();
@@ -42,7 +42,7 @@ export function VoucherLinkItem({
 	const voucherId = voucherData?.data.id;
 	useEffect(() => {
 		if (voucherId) {
-			posthog.capture("voucher_rendered");
+			captureEvent("voucher_rendered");
 		}
 	}, [voucherId]);
 

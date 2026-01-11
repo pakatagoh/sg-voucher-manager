@@ -1,7 +1,8 @@
+import * as Sentry from "@sentry/tanstackstart-react";
 import { X } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { posthog } from "@/lib/posthog-client";
+import { captureEvent } from "@/lib/posthog-client";
 import type { VoucherLink } from "@/lib/voucherStorage";
 
 interface VoucherEmptyDataDisplayProps {
@@ -23,16 +24,28 @@ export function VoucherEmptyDataDisplay({
 	const safeUrl = isValidUrl ? link.url : "#";
 
 	const handleDelete = () => {
-		posthog.capture("voucher_delete_click", {
+		captureEvent("voucher_delete_click", {
 			display_type: "empty_data_display",
 		});
 		onDelete(link.id);
 	};
 
+	const handleLinkClick = () => {
+		captureEvent("voucher_link_click", {
+			display_type: "empty_data_display",
+		});
+	};
+
 	// Track empty data display event
 	useEffect(() => {
-		posthog.capture("voucher_empty_data_displayed");
+		captureEvent("voucher_empty_data_displayed");
 	}, []);
+
+	useEffect(() => {
+		if (!isValidUrl) {
+			Sentry.captureException(new Error(`invalid URL rendered: ${link.url}`));
+		}
+	}, [isValidUrl, link.url]);
 
 	return (
 		<div className="border-2 border-foreground bg-muted p-4 mt-4">
@@ -58,6 +71,7 @@ export function VoucherEmptyDataDisplay({
 			{/* Voucher URL */}
 			{isValidUrl ? (
 				<a
+					onClick={handleLinkClick}
 					href={safeUrl}
 					target="_blank"
 					rel="noopener noreferrer"

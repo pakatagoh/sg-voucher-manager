@@ -1,4 +1,4 @@
-import { posthog } from "@/lib/posthog-client";
+import { captureEvent } from "@/lib/posthog-client";
 
 export default function Footer() {
 	const links = [
@@ -20,7 +20,7 @@ export default function Footer() {
 	];
 
 	const handleLinkClick = (label: string) => {
-		posthog.capture("footer_link_click", { link_label: label });
+		captureEvent("footer_link_click", { link_label: label });
 	};
 
 	return (
