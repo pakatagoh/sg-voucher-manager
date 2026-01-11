@@ -2,6 +2,7 @@
   "name": "sg-voucher-manager",
   "private": true,
   "type": "module",
+  "license": "MIT",
   "scripts": {
     "dev": "vite dev --port 3000",
     "start": "node dist/server/server.js",
