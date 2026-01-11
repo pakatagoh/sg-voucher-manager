@@ -1,9 +1,12 @@
+import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { useDelayedLoading } from "@/hooks/useDelayedLoading";
 import { useVoucherData } from "@/hooks/useVoucherData";
+import { posthog } from "@/lib/posthog-client";
 import type { VoucherLink } from "@/lib/voucherStorage";
 import { VoucherDataDisplay } from "./VoucherDataDisplay";
+import { VoucherEmptyDataDisplay } from "./VoucherEmptyDatalDisplay";
 
 interface VoucherLinkItemProps {
 	link: VoucherLink;
@@ -27,6 +30,21 @@ export function VoucherLinkItem({
 	} = useVoucherData(link.voucherId);
 
 	const isShowSpinner = useDelayedLoading(isLoading);
+
+	const handleRefresh = () => {
+		posthog.capture("refresh_click", {
+			display_type: voucherData ? "full_data_display" : "empty_data_display",
+		});
+		refetch();
+	};
+
+	// Emit PostHog event when voucher is successfully rendered
+	const voucherId = voucherData?.data.id;
+	useEffect(() => {
+		if (voucherId) {
+			posthog.capture("voucher_rendered");
+		}
+	}, [voucherId]);
 
 	// Loading skeleton with Bauhaus aesthetic
 	if (isShowSpinner) {
@@ -67,35 +85,32 @@ export function VoucherLinkItem({
 
 	return (
 		<li className="bg-background mb-8 last:mb-0">
-			{voucherData && (
+			{voucherData ? (
 				<VoucherDataDisplay
+					link={link}
 					data={voucherData}
-					url={link.url}
 					onDelete={onDelete}
 					isDeleting={isDeleting}
-					id={link.id}
-					error={error}
+					queryError={error}
+					deleteError={deleteError}
 				/>
-			)}
-
-			{/* Delete error display */}
-			{deleteError && (
-				<div className="border-2 border-destructive bg-muted p-3 mt-2">
-					<p className="font-bold uppercase text-xs tracking-wide mb-1">
-						Delete Error
-					</p>
-					<p className="text-sm">{deleteError.message}</p>
-				</div>
-			)}
+			) : !isLoading && !voucherData ? (
+				<VoucherEmptyDataDisplay
+					link={link}
+					onDelete={onDelete}
+					isDeleting={isDeleting}
+					deleteError={deleteError}
+				/>
+			) : null}
 
 			{/* Refresh button at bottom spanning full width */}
-			{voucherData && (
+			{!isLoading && (
 				<div className="mt-2">
 					<Button
 						type="button"
 						variant="outline"
 						size="sm"
-						onClick={() => refetch()}
+						onClick={handleRefresh}
 						disabled={isFetching}
 						className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground"
 						aria-label={

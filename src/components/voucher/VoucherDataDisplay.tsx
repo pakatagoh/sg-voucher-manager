@@ -1,31 +1,40 @@
 import { X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { posthog } from "@/lib/posthog-client";
+import type { VoucherLink } from "@/lib/voucherStorage";
 import { processVoucherData } from "@/lib/voucherUtils";
 import type { DenominationBreakdown, VoucherData } from "@/types/voucher";
 
 interface VoucherDataDisplayProps {
 	data: VoucherData;
-	url: string;
+	link: VoucherLink;
 	onDelete: (id: string) => void;
 	isDeleting: boolean;
-	id: string;
-	error: Error | null;
+	queryError: Error | null;
+	deleteError: Error | null;
 }
 
 export function VoucherDataDisplay({
 	data,
-	url,
+	link,
 	onDelete,
 	isDeleting,
-	id,
-	error,
+	queryError,
+	deleteError,
 }: VoucherDataDisplayProps) {
 	const processedData = processVoucherData(data);
 
 	// Enhanced URL safety check - defense-in-depth
 	// Validate URL at render time to prevent any bypassed URLs from being clickable
-	const isValidUrl = url.startsWith("https://voucher.redeem.gov.sg/");
-	const safeUrl = isValidUrl ? url : "#";
+	const isValidUrl = link.url.startsWith("https://voucher.redeem.gov.sg/");
+	const safeUrl = isValidUrl ? link.url : "#";
+
+	const handleDelete = () => {
+		posthog.capture("voucher_delete_click", {
+			display_type: "full_data_display",
+		});
+		onDelete(link.id);
+	};
 
 	const renderBreakdownSummary = (
 		breakdown: DenominationBreakdown,
@@ -64,12 +73,12 @@ export function VoucherDataDisplay({
 	return (
 		<div className="border-2 border-foreground bg-muted p-4 mt-4">
 			<div className="flex justify-between gap-4 mb-3">
-				<h3 className="flex-1">{processedData.name}</h3>
+				<p className="flex-1 text-lg font-bold">{processedData.name}</p>
 				<Button
 					type="button"
 					variant="outline"
 					size="icon-sm"
-					onClick={() => onDelete(id)}
+					onClick={handleDelete}
 					disabled={isDeleting}
 					className="border-2 border-foreground bg-background hover:bg-background hover:border-destructive focus-visible:ring-destructive"
 					aria-label={isDeleting ? "Deleting voucher" : "Delete voucher"}
@@ -86,14 +95,14 @@ export function VoucherDataDisplay({
 					rel="noopener noreferrer"
 					className="text-sm font-medium text-primary underline hover:text-primary/80 transition-colors break-all block mb-2"
 				>
-					{url}
+					{link.url}
 				</a>
 			) : (
 				<span
 					className="text-sm font-medium text-destructive line-through break-all block mb-2 cursor-not-allowed"
 					title="Invalid voucher URL"
 				>
-					{url} (Invalid URL)
+					{link.url} (Invalid URL)
 				</span>
 			)}
 			<p className="text-sm mb-4 font-bold">
@@ -107,13 +116,24 @@ export function VoucherDataDisplay({
 			)}
 			{renderBreakdownSummary(processedData.climateBreakdown, "Climate")}
 
-			{error && (
+			{queryError && (
 				<div className="border-l-4 border-destructive pl-4 mt-4">
 					<p className="text-sm text-destructive mb-1">
 						<span className="font-bold uppercase text-xs">Error:</span>{" "}
-						{error?.message}
+						{queryError.message}
 					</p>
 					<p className="text-xs">Try refreshing to fetch the latest data.</p>
+				</div>
+			)}
+
+			{/* Delete error display */}
+			{deleteError && (
+				<div className="border-l-4 border-destructive pl-4 mt-4">
+					<p className="text-sm text-destructive mb-1">
+						<span className="font-bold uppercase text-xs">Delete Error:</span>{" "}
+						{deleteError.message}
+					</p>
+					<p className="text-xs">Try deleting again.</p>
 				</div>
 			)}
 		</div>
