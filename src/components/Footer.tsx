@@ -7,7 +7,7 @@ export default function Footer() {
 		},
 		{
 			label: "GitHub",
-			url: "https://github.com/pakatagoh/manage-cdc",
+			url: "https://github.com/pakatagoh/sg-voucher-manager",
 			description: "Open issues or submit PRs",
 		},
 		{
