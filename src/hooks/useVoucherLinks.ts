@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/tanstackstart-react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { extractVoucherId, isValidCdcVoucherUrl } from "@/lib/cdcVoucherSchema";
-import { posthog } from "@/lib/posthog-client";
+import { captureEvent } from "@/lib/posthog-client";
 import {
 	addVoucherLink,
 	deleteVoucherLink,
@@ -97,7 +97,7 @@ export function useVoucherLinks() {
 			// Pre-cache the fetched voucher data
 			queryClient.setQueryData(["voucherData", newLink.voucherId], voucherData);
 
-			posthog.capture("voucher_add_success");
+			captureEvent("voucher_add_success");
 		},
 		onError: (error: Error) => {
 			// Capture error event to PostHog with context
@@ -106,7 +106,7 @@ export function useVoucherLinks() {
 					? error.exceptionType
 					: "unknown_error";
 
-			posthog.capture("voucher_add_failed", {
+			captureEvent("voucher_add_failed", {
 				error_message: error.message,
 				error_type: errorType,
 			});
@@ -141,14 +141,14 @@ export function useVoucherLinks() {
 				queryKey: ["voucherData", deletedLink.voucherId],
 				exact: true,
 			});
-			posthog.capture("voucher_delete_success");
+			captureEvent("voucher_delete_success");
 		},
 		onError: (error: Error) => {
 			const errorType =
 				error instanceof VoucherError && error.exceptionType
 					? error.exceptionType
 					: "unknown_error";
-			posthog.capture("voucher_delete_failed", {
+			captureEvent("voucher_delete_failed", {
 				error_message: error.message,
 				error_type: errorType,
 			});
