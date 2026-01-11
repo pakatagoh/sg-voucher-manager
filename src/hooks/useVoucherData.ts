@@ -17,6 +17,7 @@ export function useVoucherData(voucherId: string) {
 		},
 		staleTime: 0, // Instantly stale
 		retry: false,
+		refetchOnMount: false,
 		refetchOnWindowFocus: false,
 		refetchOnReconnect: false,
 	});
