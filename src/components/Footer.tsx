@@ -1,3 +1,5 @@
+import { posthog } from "@/lib/posthog-client";
+
 export default function Footer() {
 	const links = [
 		{
@@ -17,6 +19,10 @@ export default function Footer() {
 		},
 	];
 
+	const handleLinkClick = (label: string) => {
+		posthog.capture("footer_link_click", { link_label: label });
+	};
+
 	return (
 		<footer className="bg-background pt-8 pb-8">
 			<div className="mx-auto max-w-7xl px-4 md:px-6">
@@ -26,6 +32,7 @@ export default function Footer() {
 					<div className="flex flex-wrap gap-4">
 						{links.map((link) => (
 							<a
+								onClick={() => handleLinkClick(link.label)}
 								key={link.label}
 								href={link.url}
 								target="_blank"
