@@ -55,6 +55,9 @@ export const Route = createFileRoute("/")({
 function App() {
 	return (
 		<div className="mx-auto max-w-7xl px-4 pt-4 md:px-6">
+			<h1 className="sr-only md:not-sr-only md:text-4xl md:font-bold md:uppercase md:tracking-tight md:mb-8">
+				Manage Your SG Voucher Links
+			</h1>
 			<AddVoucherForm />
 			<ClientOnly>
 				<SavedVouchersList />
