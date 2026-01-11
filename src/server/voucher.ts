@@ -49,12 +49,10 @@ const sentryMetricsMiddleware = createMiddleware().server(async ({ next }) => {
  * This function:
  * 1. Validates the voucher ID format
  * 2. Tracks metrics with Sentry
- * 3. Applies rate limiting (30 requests/min in production)
  * 4. Fetches voucher data from the Singapore government API
  */
 export const getVoucherData = createServerFn({ method: "POST" })
 	.middleware([sentryMetricsMiddleware])
-	// .middleware([rateLimitMiddleware])
 	.inputValidator(voucherIdSchema)
 	.handler(async ({ data }) => {
 		const response = await fetch(

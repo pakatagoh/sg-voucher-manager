@@ -8,7 +8,7 @@ This guide provides essential information for coding agents working on the SG Vo
 **Stack:** React 19 + TanStack Start + TypeScript + Tailwind CSS 4  
 **Framework:** TanStack Start (full-stack React with SSR)  
 **Deployment:** Netlify  
-**Design System:** Bauhaus Minimal (sharp corners, geometric, bold typography)
+**Design Style:** Bauhaus Minimal (sharp corners, geometric, bold typography)
 
 ## Build & Development Commands
 
@@ -59,6 +59,7 @@ vitest --watch src/components/voucher/AddVoucherForm.test.tsx
 ### Imports
 
 Follow this order (auto-organized by Biome):
+
 1. Type imports (`import type`)
 2. External dependencies (React, third-party)
 3. Internal absolute imports (`@/components`, `@/lib`, etc.)
@@ -83,22 +84,22 @@ import { useVoucherLinks } from "@/hooks/useVoucherLinks";
 ```typescript
 // Good
 export interface VoucherLink {
-	id: string;
-	voucherId: string;
-	url: string;
-	createdAt: string;
+ id: string;
+ voucherId: string;
+ url: string;
+ createdAt: string;
 }
 
 export type VoucherType = "heartland" | "supermarket" | "climate";
 
 // Good - explicit return type
 export function getVoucherLinks(): VoucherLink[] {
-	// ...
+ // ...
 }
 
 // Bad - implicit return type (avoid for exported functions)
 export function getVoucherLinks() {
-	// ...
+ // ...
 }
 ```
 
@@ -106,7 +107,7 @@ export function getVoucherLinks() {
 
 - **Files:** camelCase for utilities, PascalCase for components
   - Components: `AddVoucherForm.tsx`, `VoucherDataDisplay.tsx`
-  - Utils: `voucherStorage.ts`, `rateLimiter.ts`
+  - Utils: `voucherStorage.ts`
 - **Variables/Functions:** camelCase (`handleSubmit`, `voucherData`)
 - **Constants:** UPPER_SNAKE_CASE (`STORAGE_KEY`, `API_URL`)
 - **Types/Interfaces:** PascalCase (`VoucherLink`, `ProcessedVoucherData`)
@@ -115,13 +116,13 @@ export function getVoucherLinks() {
 ```typescript
 // Good
 export function AddVoucherForm() {
-	const formRef = useRef<HTMLFormElement>(null);
-	// ...
+ const formRef = useRef<HTMLFormElement>(null);
+ // ...
 }
 
 // Bad (arrow function for components)
 export const AddVoucherForm = () => {
-	// ...
+ // ...
 }
 ```
 
@@ -135,17 +136,17 @@ export const AddVoucherForm = () => {
 
 ```typescript
 export function AddVoucherForm() {
-	const formRef = useRef<HTMLFormElement>(null);
-	const { addLink } = useVoucherLinks();
+ const formRef = useRef<HTMLFormElement>(null);
+ const { addLink } = useVoucherLinks();
 
-	const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
-		e.preventDefault();
-		const formData = new FormData(e.currentTarget);
-		const url = formData.get("url") as string;
-		// ...
-	};
+ const handleSubmit: FormEventHandler<HTMLFormElement> = (e) => {
+  e.preventDefault();
+  const formData = new FormData(e.currentTarget);
+  const url = formData.get("url") as string;
+  // ...
+ };
 
-	return <form ref={formRef} onSubmit={handleSubmit}>...</form>;
+ return <form ref={formRef} onSubmit={handleSubmit}>...</form>;
 }
 ```
 
@@ -158,25 +159,25 @@ export function AddVoucherForm() {
 ```typescript
 // Server-side
 if (!response.ok) {
-	const message = `API request failed: ${response.statusText}`;
-	throw new Error(message);
+ const message = `API request failed: ${response.statusText}`;
+ throw new Error(message);
 }
 
 // Client-side utility
 try {
-	// operation
-	return { success: true, message: "Operation successful" };
+ // operation
+ return { success: true, message: "Operation successful" };
 } catch (error) {
-	console.error("Error description:", error);
-	return { success: false, message: "Operation failed" };
+ console.error("Error description:", error);
+ return { success: false, message: "Operation failed" };
 }
 
 // UI error display
 {addLink.isError && (
-	<div className="border-2 border-destructive bg-muted p-4 mt-4">
-		<p className="font-bold uppercase text-sm mb-1">Error</p>
-		<p className="text-sm">{addLink.error.message}</p>
-	</div>
+ <div className="border-2 border-destructive bg-muted p-4 mt-4">
+  <p className="font-bold uppercase text-sm mb-1">Error</p>
+  <p className="text-sm">{addLink.error.message}</p>
+ </div>
 )}
 ```
 
@@ -193,11 +194,10 @@ try {
  * This function:
  * 1. Validates the voucher ID format
  * 2. Tracks metrics with Sentry
- * 3. Applies rate limiting (30 requests/min in production)
  * 4. Fetches voucher data from the Singapore government API
  */
 export const getVoucherData = createServerFn({ method: "POST" })
-	// ...
+ // ...
 ```
 
 ## File Organization
@@ -232,6 +232,7 @@ src/
 ## Environment Variables
 
 Create `.env` from `.env.example`:
+
 - `ENVIRONMENT` - Server environment (development/production)
 - `SENTRY_AUTH_TOKEN` - Sentry authentication token
 - `VITE_ENVIRONMENT` - Client-side environment variable
@@ -249,4 +250,3 @@ Create `.env` from `.env.example`:
 - **Global styles:** `src/styles.css` is excluded from Biome formatting
 - **Design system:** Maintain Bauhaus aesthetic (zero border-radius, geometric)
 - **Server functions:** Use TanStack Start patterns with validation
-- **Rate limiting:** Available via middleware (currently commented out)
