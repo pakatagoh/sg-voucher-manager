@@ -18,7 +18,6 @@ const config = defineConfig({
 		),
 	},
 	plugins: [
-		netlify(),
 		// this is the plugin that enables path aliases
 		viteTsConfigPaths({
 			projects: ["./tsconfig.json"],
@@ -26,6 +25,8 @@ const config = defineConfig({
 		tailwindcss(),
 		tanstackStart(),
 		viteReact(),
+		netlify(),
+		devtools(),
 		sentryVitePlugin({
 			authToken: process.env.SENTRY_AUTH_TOKEN,
 			org: "personal-kqc",
@@ -41,7 +42,6 @@ const config = defineConfig({
 				],
 			},
 		}),
-		devtools(),
 	],
 });
 
