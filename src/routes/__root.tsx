@@ -13,7 +13,9 @@ import Header from "../components/Header";
 import appCss from "../styles.css?url";
 
 // Initialize Sentry on server side before anything else
-import "../server/sentry.js";
+import "../server/sentry";
+import { useEffect } from "react";
+import { initPostHog } from "@/lib/posthog-client";
 
 export const Route = createRootRouteWithContext<{
 	queryClient: QueryClient;
@@ -139,8 +141,12 @@ export const Route = createRootRouteWithContext<{
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
+	useEffect(() => {
+		initPostHog();
+	}, []);
+
 	return (
-		<html lang="en" suppressHydrationWarning>
+		<html lang="en">
 			<head>
 				<HeadContent />
 			</head>
