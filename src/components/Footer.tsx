@@ -40,7 +40,7 @@ export default function Footer() {
 						))}
 					</div>
 
-					<div className="mt-8 border-t-2 border-foreground pt-4">
+					<div className="mt-8 border-t-4 border-foreground pt-4">
 						<div className="mb-6 space-y-1">
 							<h3 className="mb-2 text-xs font-bold uppercase tracking-wide text-foreground/70 md:text-sm">
 								Privacy & Disclaimer
