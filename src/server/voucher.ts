@@ -2,8 +2,6 @@ import * as Sentry from "@sentry/tanstackstart-react";
 import { createMiddleware, createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 
-// import { rateLimitMiddleware } from "./middleware";
-
 // Zod schema to validate voucher ID (alphanumeric characters only)
 const voucherIdSchema = z.object({
 	id: z

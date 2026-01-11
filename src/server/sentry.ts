@@ -44,17 +44,4 @@ if (typeof window === "undefined") {
 		"[Sentry Server] Sentry.metrics available:",
 		typeof Sentry.metrics,
 	);
-
-	// Test metric on startup to verify it's working
-	// 	try {
-	// 		Sentry.metrics.count("sentry_init_test", 1, {
-	// 			attributes: {
-	// 				environment,
-	// 				type: "server_startup",
-	// 			},
-	// 		});
-	// 		console.log("[Sentry Server] Test metric sent successfully");
-	// 	} catch (error) {
-	// 		console.error("[Sentry Server] Failed to send test metric:", error);
-	// 	}
 }
