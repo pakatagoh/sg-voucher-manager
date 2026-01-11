@@ -1,327 +1,216 @@
-Welcome to your new TanStack app! 
+# SG Voucher Manager
 
-# Getting Started
+A modern web application for managing and validating Singapore CDC vouchers. Built with React 19, TanStack Start, and deployed on Netlify.
 
-## Environment Setup
+## Project Overview
 
-This application requires an encryption key to secure sensitive voucher URLs. Follow these steps:
+**Project Name:** SG Voucher Manager (manage-cdc)  
+**Tech Stack:** React 19 + TanStack Start + TypeScript + Tailwind CSS 4  
+**Design Style:** Bauhaus Minimal (geometric shapes, sharp corners, bold typography)  
+**Deployment:** Netlify
 
-1. **Copy the environment template:**
-   ```bash
-   cp .env.example .env
-   ```
+## Features
 
-2. **Generate a secure encryption key:**
-   ```bash
-   node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"
-   ```
+- Validate Singapore CDC voucher URLs
+- Extract and display voucher information from government APIs
+- Client-side voucher link storage
+- Error tracking and monitoring
+- Analytics and user insights
 
-3. **Update the `.env` file** with your generated key:
-   ```
-   ENCRYPTION_KEY=your_generated_key_here
-   ```
+## Prerequisites
 
-   **IMPORTANT:** 
-   - Keep this key secret and never commit it to version control
-   - If you lose this key, you won't be able to decrypt existing voucher URLs
-   - Use different keys for development and production environments
+Before you begin, ensure you have the following installed:
 
-## Running the Application
+- **Node.js**: v22.21.1 (specified in `.nvmrc`)
+- **npm**: Latest version (comes with Node.js)
 
-To run this application:
+### Recommended Tools
+
+- **mise** (Recommended): Modern tool version manager
+
+  ```bash
+  # Install mise (macOS/Linux)
+  curl https://mise.run | sh
+  
+  # Use the correct Node version (automatically reads mise.toml)
+  mise install
+  ```
+  
+  **Note:** `nvm` also works if you prefer it over mise.
+
+- **Visual Studio Code**: Recommended IDE with the following extensions:
+  - Biome (for linting and formatting)
+  - Tailwind CSS IntelliSense
+  - TypeScript and JavaScript Language Features
+
+## Getting Started
+
+### 1. Clone the Repository
+
+```bash
+git clone <repository-url>
+```
+
+and `cd` into the repository
+
+### 2. Install Dependencies
 
 ```bash
 npm install
-npm run start
 ```
 
-# Building For Production
+### 3. Environment Setup
 
-To build this application for production:
+Copy the environment template and configure your environment variables:
 
 ```bash
-npm run build
+cp .env.example .env
 ```
 
-## Testing
+Edit `.env` and configure the following variables:
 
-This project uses [Vitest](https://vitest.dev/) for testing. You can run the tests with:
+#### Server Environment Variables
 
 ```bash
-npm run test
+# Sentry Configuration (Error tracking and monitoring)
+SENTRY_AUTH_TOKEN=your_sentry_auth_token
+
+# Note: SENTRY_RELEASE is automatically set during build
+# - Local builds: SENTRY_RELEASE=$(git rev-parse HEAD)
+# - Netlify: SENTRY_RELEASE=$COMMIT_REF
 ```
 
-## Styling
-
-This project uses [Tailwind CSS](https://tailwindcss.com/) for styling.
-
-
-## Linting & Formatting
-
-This project uses [Biome](https://biomejs.dev/) for linting and formatting. The following scripts are available:
-
+#### Public Environment Variables (Client-side)
 
 ```bash
-npm run lint
-npm run format
-npm run check
+# Application Configuration
+VITE_APP_NAME=sg-voucher-manager
+VITE_APP_URL=https://your-domain.com
+VITE_ENVIRONMENT=development
+
+# Sentry DSN (for client-side error tracking)
+VITE_SENTRY_DSN=your_sentry_dsn
+
+# PostHog Configuration (Analytics)
+VITE_POSTHOG_KEY=your_posthog_key
+VITE_POSTHOG_HOST=https://your-posthog-host.com
 ```
 
-
-
-## Routing
-This project uses [TanStack Router](https://tanstack.com/router). The initial setup is a file based router. Which means that the routes are managed as files in `src/routes`.
-
-### Adding A Route
-
-To add a new route to your application just add another a new file in the `./src/routes` directory.
-
-TanStack will automatically generate the content of the route file for you.
-
-Now that you have two routes you can use a `Link` component to navigate between them.
-
-### Adding Links
-
-To use SPA (Single Page Application) navigation you will need to import the `Link` component from `@tanstack/react-router`.
-
-```tsx
-import { Link } from "@tanstack/react-router";
-```
-
-Then anywhere in your JSX you can use it like so:
-
-```tsx
-<Link to="/about">About</Link>
-```
-
-This will create a link that will navigate to the `/about` route.
-
-More information on the `Link` component can be found in the [Link documentation](https://tanstack.com/router/v1/docs/framework/react/api/router/linkComponent).
-
-### Using A Layout
-
-In the File Based Routing setup the layout is located in `src/routes/__root.tsx`. Anything you add to the root route will appear in all the routes. The route content will appear in the JSX where you use the `<Outlet />` component.
-
-Here is an example layout that includes a header:
-
-```tsx
-import { Outlet, createRootRoute } from '@tanstack/react-router'
-import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
-
-import { Link } from "@tanstack/react-router";
-
-export const Route = createRootRoute({
-  component: () => (
-    <>
-      <header>
-        <nav>
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-        </nav>
-      </header>
-      <Outlet />
-      <TanStackRouterDevtools />
-    </>
-  ),
-})
-```
-
-The `<TanStackRouterDevtools />` component is not required so you can remove it if you don't want it in your layout.
-
-More information on layouts can be found in the [Layouts documentation](https://tanstack.com/router/latest/docs/framework/react/guide/routing-concepts#layouts).
-
-
-## Data Fetching
-
-There are multiple ways to fetch data in your application. You can use TanStack Query to fetch data from a server. But you can also use the `loader` functionality built into TanStack Router to load the data for a route before it's rendered.
-
-For example:
-
-```tsx
-const peopleRoute = createRoute({
-  getParentRoute: () => rootRoute,
-  path: "/people",
-  loader: async () => {
-    const response = await fetch("https://swapi.dev/api/people");
-    return response.json() as Promise<{
-      results: {
-        name: string;
-      }[];
-    }>;
-  },
-  component: () => {
-    const data = peopleRoute.useLoaderData();
-    return (
-      <ul>
-        {data.results.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    );
-  },
-});
-```
-
-Loaders simplify your data fetching logic dramatically. Check out more information in the [Loader documentation](https://tanstack.com/router/latest/docs/framework/react/guide/data-loading#loader-parameters).
-
-### React-Query
-
-React-Query is an excellent addition or alternative to route loading and integrating it into you application is a breeze.
-
-First add your dependencies:
+### 4. Run Development Server
 
 ```bash
-npm install @tanstack/react-query @tanstack/react-query-devtools
+npm run dev
 ```
 
-Next we'll need to create a query client and provider. We recommend putting those in `main.tsx`.
+The application will start on `http://localhost:3000`
 
-```tsx
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+## Code Style & Standards
 
-// ...
+This project uses **Biome** for linting and formatting
 
-const queryClient = new QueryClient();
+See `biome.json`
 
-// ...
+See [AGENTS.md](./AGENTS.md) for detailed code style guidelines.
 
-if (!rootElement.innerHTML) {
-  const root = ReactDOM.createRoot(rootElement);
+## Project Structure
 
-  root.render(
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-    </QueryClientProvider>
-  );
-}
+```
+manage-cdc/
+├── public/                 # Static assets (favicon, manifest, images)
+├── src/
+│   ├── components/        # React components
+│   │   ├── ui/           # Reusable UI components (shadcn/ui)
+│   │   └── voucher/      # Feature-specific components
+│   ├── hooks/            # Custom React hooks
+│   ├── lib/              # Utility libraries and Zod schemas
+│   ├── routes/           # TanStack Router file-based routes
+│   ├── server/           # Server-side code
+│   │   ├── middleware.ts # middlewares
+│   │   ├── voucher.ts    # Voucher API server functions
+│   │   └── sentry.ts     # Sentry configuration
+│   ├── types/            # TypeScript type definitions
+│   ├── router.tsx        # Router configuration
+│   ├── start.ts          # Application entry point
+│   └── styles.css        # Global styles
+├── .env.example          # Environment variables template
+├── .nvmrc                # Node version specification
+├── netlify.toml          # Netlify deployment configuration
+├── package.json          # Project dependencies and scripts
+├── tsconfig.json         # TypeScript configuration
+├── vite.config.ts        # Vite build configuration
+└── AGENTS.md             # Detailed development guide
 ```
 
-You can also add TanStack Query Devtools to the root route (optional).
+## Deployment
 
-```tsx
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+### Netlify
 
-const rootRoute = createRootRoute({
-  component: () => (
-    <>
-      <Outlet />
-      <ReactQueryDevtools buttonPosition="top-right" />
-      <TanStackRouterDevtools />
-    </>
-  ),
-});
-```
+This application is configured for deployment on **Netlify**
 
-Now you can use `useQuery` to fetch your data.
+#### Configuration
 
-```tsx
-import { useQuery } from "@tanstack/react-query";
+The `netlify.toml` file includes:
 
-import "./App.css";
+- **Build command:** Automatic Sentry release tracking
+- **Headers:** Proper content-type for PWA manifest
+- **Redirects:** PostHog analytics proxy to avoid ad blockers
 
-function App() {
-  const { data } = useQuery({
-    queryKey: ["people"],
-    queryFn: () =>
-      fetch("https://swapi.dev/api/people")
-        .then((res) => res.json())
-        .then((data) => data.results as { name: string }[]),
-    initialData: [],
-  });
+## External Services Integration
 
-  return (
-    <div>
-      <ul>
-        {data.map((person) => (
-          <li key={person.name}>{person.name}</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+### 1. Sentry (Error Tracking & Performance Monitoring)
 
-export default App;
-```
+**Purpose:** Error tracking, performance monitoring, and metrics
 
-You can find out everything you need to know on how to use React-Query in the [React-Query documentation](https://tanstack.com/query/latest/docs/framework/react/overview).
+**Setup:**
 
-## State Management
+1. Create a Sentry account at [sentry.io](https://sentry.io)
+2. Create a new project for your application
+3. Get your DSN and Auth Token
+4. Add to `.env` file
 
-Another common requirement for React applications is state management. There are many options for state management in React. TanStack Store provides a great starting point for your project.
+### 2. PostHog (Product Analytics)
 
-First you need to add TanStack Store as a dependency:
+**Purpose:** User analytics, feature flags, session recording
 
-```bash
-npm install @tanstack/store
-```
+**Configuration:**
 
-Now let's create a simple counter in the `src/App.tsx` file as a demonstration.
+- Proxy configured via Netlify redirects (`/ph/*` → PostHog)
+- Prevents ad-blocker interference
+- Captures page views and custom events
 
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store } from "@tanstack/store";
-import "./App.css";
+**Setup:**
 
-const countStore = new Store(0);
+1. Create a PostHog account at [posthog.com](https://posthog.com)
+2. Create a new project
+3. Get your project key and host URL
+4. Add to `.env` file
 
-function App() {
-  const count = useStore(countStore);
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-    </div>
-  );
-}
+### 3. CDC API (Singapore Government)
 
-export default App;
-```
+**Purpose:** Validate voucher IDs and retrieve voucher data
 
-One of the many nice features of TanStack Store is the ability to derive state from other state. That derived state will update when the base state updates.
+**Configuration:**
 
-Let's check this out by doubling the count using derived state.
+- Input validation with Zod schemas
+- Error handling and retry logic
 
-```tsx
-import { useStore } from "@tanstack/react-store";
-import { Store, Derived } from "@tanstack/store";
-import "./App.css";
+**No setup required** - This is a public API provided by the Singapore government.
 
-const countStore = new Store(0);
+## Key Technologies
 
-const doubledStore = new Derived({
-  fn: () => countStore.state * 2,
-  deps: [countStore],
-});
-doubledStore.mount();
+- **Framework:** [TanStack Start](https://tanstack.com/start) - Full-stack React framework with SSR
+- **Data Fetching:** [TanStack Query](https://tanstack.com/query) - Server state management
+- **Styling:** [Tailwind CSS 4](https://tailwindcss.com) - Utility-first CSS framework
+- **UI Components:** [shadcn/ui](https://ui.shadcn.com)
+- **Validation:** [Zod](https://zod.dev) - TypeScript-first schema validation
+- **Icons:** [Lucide React](https://lucide.dev) - Icon library
+- **Linting/Formatting:** [Biome](https://biomejs.dev) - Fast linter and formatter
+- **Build Tool:** [Vite](https://vite.dev) - Next generation frontend tooling
 
-function App() {
-  const count = useStore(countStore);
-  const doubledCount = useStore(doubledStore);
+## License
 
-  return (
-    <div>
-      <button onClick={() => countStore.setState((n) => n + 1)}>
-        Increment - {count}
-      </button>
-      <div>Doubled - {doubledCount}</div>
-    </div>
-  );
-}
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-export default App;
-```
+## Support
 
-We use the `Derived` class to create a new store that is derived from another store. The `Derived` class has a `mount` method that will start the derived store updating.
-
-Once we've created the derived store we can use it in the `App` component just like we would any other store using the `useStore` hook.
-
-You can find out everything you need to know on how to use TanStack Store in the [TanStack Store documentation](https://tanstack.com/store/latest).
-
-# Demo files
-
-Files prefixed with `demo` can be safely deleted. They are there to provide a starting point for you to play around with the features you've installed.
-
-# Learn More
-
-You can learn more about all of the offerings from TanStack in the [TanStack documentation](https://tanstack.com).
+For issues or questions, please create an issue in the repository.
