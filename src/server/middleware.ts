@@ -26,10 +26,10 @@ export const securityHeadersMiddleware = createMiddleware().server(
 		// Content Security Policy - Level 1 with frame-ancestors
 		const cspDirectives = [
 			"default-src 'self'",
-			"script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+			"script-src 'self' 'unsafe-inline' 'unsafe-eval' https://*.posthog.com https://*.i.posthog.com",
 			"style-src 'self' 'unsafe-inline'",
 			"img-src 'self' data: https:",
-			"connect-src 'self' https://*.ingest.sentry.io https://*.sentry.io",
+			"connect-src 'self' https://*.ingest.sentry.io https://*.sentry.io https://*.posthog.com https://*.i.posthog.com",
 			"font-src 'self' data:",
 			"frame-ancestors 'none'",
 			"base-uri 'self'",
