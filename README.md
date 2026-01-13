@@ -1,3 +1,12 @@
+# No longer deployed to production - for local use only
+>
+> SG Voucher Manager was built to help manage CDC and Climate vouchers, but I understand unofficial tools like this can cause confusion around official government systems.
+> In Singapore, public trust in government systems is held to a very high standard, and that’s something I respect and want to uphold.
+> So at the request of Singapore government officers, I’ve complied and taken SG Voucher Manager down publicly
+> This repo will still be left as but may be subjected to deletion
+> Users should not deploy this site for public use
+> Security of your deployment infrastructure and the logic in this codebase is not guaranteed by the Singapore government
+
 # SG Voucher Manager
 
 A modern web application for managing and validating Singapore CDC vouchers. Built with React 19, TanStack Start, and deployed on Netlify.
