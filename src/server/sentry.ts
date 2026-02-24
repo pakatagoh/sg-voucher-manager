@@ -1,7 +1,7 @@
 import * as Sentry from "@sentry/tanstackstart-react";
 
-// Only initialize on server side
-if (typeof window === "undefined") {
+// Only initialize on server side and if DSN is provided
+if (typeof window === "undefined" && process.env.VITE_SENTRY_DSN) {
 	// Server-side: Use ENVIRONMENT (set in Netlify)
 	const isDevelopment = process.env.VITE_ENVIRONMENT === "development";
 	// Client-side uses VITE_ENVIRONMENT (bundled by Vite)
@@ -44,4 +44,6 @@ if (typeof window === "undefined") {
 		"[Sentry Server] Sentry.metrics available:",
 		typeof Sentry.metrics,
 	);
+} else if (typeof window === "undefined" && !process.env.VITE_SENTRY_DSN) {
+	console.log("[Sentry Server] VITE_SENTRY_DSN not set. Skipping Sentry initialization.");
 }

@@ -25,7 +25,7 @@ export const getRouter = () => {
 		defaultPreloadStaleTime: 0,
 		defaultNotFoundComponent: () => <NotFound />,
 	});
-	if (!router.isServer) {
+	if (!router.isServer && import.meta.env.VITE_SENTRY_DSN) {
 		const env = import.meta.env.VITE_ENVIRONMENT ?? "production";
 		const isDevelopment = env === "development";
 
@@ -42,6 +42,8 @@ export const getRouter = () => {
 			sampleRate: isDevelopment ? 1.0 : 0.5,
 			allowUrls: isDevelopment ? [] : [/^https:\/\/managevoucher\.sg\/.*/],
 		});
+	} else if (!router.isServer && !import.meta.env.VITE_SENTRY_DSN) {
+		console.log("[Sentry Client] VITE_SENTRY_DSN not set. Skipping Sentry initialization.");
 	}
 
 	setupRouterSsrQueryIntegration({ router, queryClient });
