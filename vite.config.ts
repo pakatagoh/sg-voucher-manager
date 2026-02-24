@@ -1,4 +1,3 @@
-import { sentryVitePlugin } from "@sentry/vite-plugin";
 import tailwindcss from "@tailwindcss/vite";
 import { devtools } from "@tanstack/devtools-vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
@@ -9,15 +8,6 @@ import viteTsConfigPaths from "vite-tsconfig-paths";
 
 const config = defineConfig({
 	base: "/voucher/",
-	build: {
-		sourcemap: true, // Source map generation must be turned on for sentry vite plugin
-	},
-	define: {
-		// Inject SENTRY_RELEASE as a compile-time constant for client-side code
-		"import.meta.env.VITE_SENTRY_RELEASE": JSON.stringify(
-			process.env.SENTRY_RELEASE || "development",
-		),
-	},
 	plugins: [
 		// this is the plugin that enables path aliases
 		viteTsConfigPaths({
@@ -28,21 +18,6 @@ const config = defineConfig({
 		nitro(),
 		viteReact(),
 		devtools(),
-		sentryVitePlugin({
-			authToken: process.env.SENTRY_AUTH_TOKEN,
-			org: "personal-kqc",
-			project: "sg-vouchers",
-			release: {
-				name: process.env.SENTRY_RELEASE, // Will be set during build
-			},
-			sourcemaps: {
-				filesToDeleteAfterUpload: [
-					"./**/*.map",
-					".*/**/public/**/*.map",
-					"./dist/**/client/**/*.map",
-				],
-			},
-		}),
 	],
 });
 
