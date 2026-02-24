@@ -3,25 +3,28 @@ import { devtools } from "@tanstack/devtools-vite";
 import { tanstackStart } from "@tanstack/react-start/plugin/vite";
 import { nitro } from "nitro/vite";
 import viteReact from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import viteTsConfigPaths from "vite-tsconfig-paths";
 
-const config = defineConfig({
-	base: "/voucher/",
-	nitro: {
-		baseURL: "/voucher/",
-	},
-	plugins: [
-		// this is the plugin that enables path aliases
-		viteTsConfigPaths({
-			projects: ["./tsconfig.json"],
-		}),
-		tailwindcss(),
-		tanstackStart(),
-		nitro(),
-		viteReact(),
-		devtools(),
-	],
-});
+export default defineConfig(({ mode }) => {
+	const env = loadEnv(mode, process.cwd(), '');
+	const basePath = env.VITE_BASE_PATH || "/";
 
-export default config;
+	return {
+		base: basePath,
+		nitro: {
+			baseURL: basePath,
+		},
+		plugins: [
+			// this is the plugin that enables path aliases
+			viteTsConfigPaths({
+				projects: ["./tsconfig.json"],
+			}),
+			tailwindcss(),
+			tanstackStart(),
+			nitro(),
+			viteReact(),
+			devtools(),
+		],
+	};
+});

@@ -22,6 +22,7 @@ export const Route = createRootRouteWithContext<{
 }>()({
 	head: () => {
 		const baseUrl = import.meta.env.VITE_APP_URL ?? "";
+		const basePath = import.meta.env.VITE_BASE_PATH ?? "/";
 		const isProduction = import.meta.env.VITE_ENVIRONMENT === "production";
 
 		return {
@@ -112,22 +113,22 @@ export const Route = createRootRouteWithContext<{
 				},
 				{
 					rel: "apple-touch-icon",
-					href: "/voucher/apple-touch-icon.png",
+					href: `${basePath}apple-touch-icon.png`,
 					sizes: "180x180",
 				},
 				{
 					rel: "icon",
-					href: "/voucher/favicon-32x32.png",
+					href: `${basePath}favicon-32x32.png`,
 					sizes: "32x32",
 				},
 				{
 					rel: "icon",
-					href: "/voucher/favicon-16x16.png",
+					href: `${basePath}favicon-16x16.png`,
 					sizes: "16x16",
 				},
 				{
 					rel: "manifest",
-					href: "/voucher/manifest.webmanifest",
+					href: `${basePath}manifest.webmanifest`,
 				},
 				{
 					rel: "canonical",
