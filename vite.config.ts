@@ -8,6 +8,9 @@ import viteTsConfigPaths from "vite-tsconfig-paths";
 
 const config = defineConfig({
 	base: "/voucher/",
+	nitro: {
+		baseURL: "/voucher/",
+	},
 	plugins: [
 		// this is the plugin that enables path aliases
 		viteTsConfigPaths({
