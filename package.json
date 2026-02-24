@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite dev --port 3000",
-    "start": "node dist/server/server.js",
-    "build": "SENTRY_RELEASE=$(git rev-parse HEAD) vite build",
+    "build": "vite build",
+    "start": "node .output/server/index.mjs",
     "preview": "vite preview",
     "test": "vitest run",
     "format": "biome format",
@@ -28,7 +28,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.561.0",
-    "nitro": "latest",
+    "nitro": "npm:nitro-nightly@latest",
     "posthog-js": "^1.318.1",
     "posthog-node": "^5.20.0",
     "react": "19.2.3",
@@ -40,7 +40,6 @@
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.4",
-    "@netlify/vite-plugin-tanstack-start": "^1.2.6",
     "@tanstack/devtools-vite": "^0.3.11",
     "@tanstack/react-query-devtools": "^5.91.2",
     "@testing-library/dom": "^10.4.0",
