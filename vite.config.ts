@@ -8,6 +8,7 @@ import { defineConfig } from "vite";
 import viteTsConfigPaths from "vite-tsconfig-paths";
 
 const config = defineConfig({
+	base: "/voucher/",
 	build: {
 		sourcemap: true, // Source map generation must be turned on for sentry vite plugin
 	},
