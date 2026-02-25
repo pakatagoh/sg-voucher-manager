@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "vite dev --port 3000",
+    "prebuild": "node scripts/generate-manifest.js",
     "build": "vite build",
     "start": "PORT=9000 node --env-file=.env .output/server/index.mjs",
     "preview": "vite preview",
