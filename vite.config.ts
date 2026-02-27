@@ -9,9 +9,15 @@ import viteTsConfigPaths from "vite-tsconfig-paths";
 export default defineConfig(({ mode }) => {
 	const env = loadEnv(mode, process.cwd(), '');
 	const basePath = env.VITE_BASE_PATH || "/";
+	const allowedHost = env.VITE_ALLOWED_HOST;
 
 	return {
 		base: basePath,
+		...(allowedHost && {
+			server: {
+				allowedHosts: [allowedHost],
+			},
+		}),
 		nitro: {
 			baseURL: basePath,
 		},
