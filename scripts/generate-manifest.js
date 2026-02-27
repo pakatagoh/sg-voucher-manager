@@ -8,9 +8,9 @@ const __dirname = dirname(__filename);
 const basePath = process.env.VITE_BASE_PATH || "/";
 
 const manifest = {
-  name: "SG Voucher Manager",
-  short_name: "SG Voucher",
-  description: "Manage your Singapore vouchers easily",
+  name: "Voucher Manager",
+  short_name: "Voucher",
+  description: "Manage your vouchers easily",
   icons: [
     {
       src: `${basePath}favicon-16x16.png`,
