@@ -35,12 +35,12 @@ export const Route = createRootRouteWithContext<{
 					content: "width=device-width, initial-scale=1",
 				},
 				{
-					title: "SG Voucher Manager",
+					title: "Voucher Manager",
 				},
 				// SEO Meta Tags
 				{
 					name: "description",
-					content: "Manage your Singapore vouchers easily",
+					content: "Manage your vouchers easily",
 				},
 				// Prevent indexing in non-production environments
 				...(!isProduction
@@ -62,11 +62,11 @@ export const Route = createRootRouteWithContext<{
 				},
 				{
 					property: "og:title",
-					content: "SG Voucher Manager",
+					content: "Voucher Manager",
 				},
 				{
 					property: "og:description",
-					content: "Manage your Singapore vouchers easily",
+					content: "Manage your vouchers easily",
 				},
 				{
 					property: "og:image",
@@ -82,7 +82,7 @@ export const Route = createRootRouteWithContext<{
 				},
 				{
 					property: "og:site_name",
-					content: "SG Voucher Manager",
+					content: "Voucher Manager",
 				},
 				// Twitter
 				{
@@ -95,11 +95,11 @@ export const Route = createRootRouteWithContext<{
 				},
 				{
 					name: "twitter:title",
-					content: "SG Voucher Manager",
+					content: "Voucher Manager",
 				},
 				{
 					name: "twitter:description",
-					content: "Manage your Singapore vouchers easily",
+					content: "Manage your vouchers easily",
 				},
 				{
 					name: "twitter:image",
