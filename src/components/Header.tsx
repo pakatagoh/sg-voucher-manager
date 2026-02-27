@@ -6,7 +6,7 @@ export default function Header() {
 			<div className="border-b-4 border-foreground bg-background pb-4">
 				<Link to="/" className="inline-block">
 					<div className="text-xl md:text-3xl font-bold uppercase tracking-wider">
-						SG Voucher
+						<span className="line-through text-red-500">SG</span> Voucher
 						<span className="ml-2 inline-block bg-primary px-2 py-1 md:px-3 md:py-1 text-primary-foreground">
 							Manager
 						</span>
