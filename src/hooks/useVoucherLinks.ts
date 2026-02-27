@@ -6,6 +6,7 @@ import {
 	addVoucherLink,
 	deleteVoucherLink,
 	getVoucherLinks,
+	reorderVoucherLinks,
 	type VoucherLink,
 } from "@/lib/voucherStorage";
 import { getVoucherData } from "@/server/voucher";
@@ -155,10 +156,56 @@ export function useVoucherLinks() {
 		},
 	});
 
+	// Mutation for reordering voucher links
+	const reorderLink = useMutation({
+		mutationFn: async ({
+			id,
+			direction,
+		}: {
+			id: string;
+			direction: "up" | "down";
+		}) => {
+			const result = reorderVoucherLinks(id, direction);
+			if (!result.success) {
+				throw new VoucherError(result.message, result.exceptionType);
+			}
+			return { id, direction };
+		},
+		onSuccess: ({ id, direction }) => {
+			// Update voucher links cache with new order
+			queryClient.setQueryData<VoucherLink[]>(["voucherLinks"], (old = []) => {
+				const currentIndex = old.findIndex((l) => l.id === id);
+				if (currentIndex === -1) return old;
+
+				const newIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+				if (newIndex < 0 || newIndex >= old.length) return old;
+
+				const newLinks = [...old];
+				const temp = newLinks[currentIndex];
+				newLinks[currentIndex] = newLinks[newIndex];
+				newLinks[newIndex] = temp;
+
+				return newLinks;
+			});
+			captureEvent("voucher_reorder_success", { direction });
+		},
+		onError: (error: Error) => {
+			const errorType =
+				error instanceof VoucherError && error.exceptionType
+					? error.exceptionType
+					: "unknown_error";
+			captureEvent("voucher_reorder_failed", {
+				error_message: error.message,
+				error_type: errorType,
+			});
+		},
+	});
+
 	return {
 		links,
 		addLink,
 		deleteLink,
+		reorderLink,
 		isLoading,
 		error: queryError,
 	};

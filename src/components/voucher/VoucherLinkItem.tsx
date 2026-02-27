@@ -1,3 +1,4 @@
+import { ChevronDown, ChevronUp } from "lucide-react";
 import { useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -13,6 +14,10 @@ interface VoucherLinkItemProps {
 	onDelete: (id: string) => void;
 	isDeleting: boolean;
 	deleteError: Error | null;
+	onMoveUp?: (id: string) => void;
+	onMoveDown?: (id: string) => void;
+	canMoveUp?: boolean;
+	canMoveDown?: boolean;
 }
 
 export function VoucherLinkItem({
@@ -20,6 +25,10 @@ export function VoucherLinkItem({
 	onDelete,
 	isDeleting,
 	deleteError,
+	onMoveUp,
+	onMoveDown,
+	canMoveUp = true,
+	canMoveDown = true,
 }: VoucherLinkItemProps) {
 	const {
 		data: voucherData,
@@ -105,14 +114,40 @@ export function VoucherLinkItem({
 
 			{/* Refresh button at bottom spanning full width */}
 			{!isLoading && (
-				<div className="mt-2">
+				<div className="mt-2 flex gap-2">
+					{onMoveUp && onMoveDown && (
+						<div className="flex gap-1">
+							<Button
+								type="button"
+								variant="outline"
+								size="sm"
+								onClick={() => onMoveUp(link.id)}
+								disabled={!canMoveUp}
+								className="border-foreground/50 text-foreground/70 hover:bg-foreground hover:text-background disabled:opacity-30 disabled:cursor-not-allowed px-2"
+								aria-label="Move voucher up"
+							>
+								<ChevronUp className="size-4" />
+							</Button>
+							<Button
+								type="button"
+								variant="outline"
+								size="sm"
+								onClick={() => onMoveDown(link.id)}
+								disabled={!canMoveDown}
+								className="border-foreground/50 text-foreground/70 hover:bg-foreground hover:text-background disabled:opacity-30 disabled:cursor-not-allowed px-2"
+								aria-label="Move voucher down"
+							>
+								<ChevronDown className="size-4" />
+							</Button>
+						</div>
+					)}
 					<Button
 						type="button"
 						variant="outline"
 						size="sm"
 						onClick={handleRefresh}
 						disabled={isFetching}
-						className="w-full border-primary text-primary hover:bg-primary hover:text-primary-foreground"
+						className="flex-1 border-primary text-primary hover:bg-primary hover:text-primary-foreground"
 						aria-label={
 							isFetching ? "Refreshing voucher data" : "Refresh voucher data"
 						}
