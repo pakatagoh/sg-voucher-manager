@@ -3,10 +3,18 @@ import { useVoucherLinks } from "@/hooks/useVoucherLinks";
 import { VoucherLinkItem } from "./VoucherLinkItem";
 
 export function SavedVouchersList() {
-	const { links, deleteLink } = useVoucherLinks();
+	const { links, deleteLink, reorderLink } = useVoucherLinks();
 
 	const handleDelete = (id: string) => {
 		deleteLink.mutate(id);
+	};
+
+	const handleMoveUp = (id: string) => {
+		reorderLink.mutate({ id, direction: "down" });
+	};
+
+	const handleMoveDown = (id: string) => {
+		reorderLink.mutate({ id, direction: "up" });
 	};
 
 	// Reverse links once for display order (newest first)
@@ -16,7 +24,7 @@ export function SavedVouchersList() {
 		<>
 			{reversedLinks.length > 0 ? (
 				<ul>
-					{reversedLinks.map((link) => {
+					{reversedLinks.map((link, index) => {
 						return (
 							<VoucherLinkItem
 								key={link.id}
@@ -24,6 +32,10 @@ export function SavedVouchersList() {
 								onDelete={handleDelete}
 								isDeleting={deleteLink.isPending}
 								deleteError={deleteLink.error}
+								onMoveUp={handleMoveUp}
+								onMoveDown={handleMoveDown}
+								canMoveUp={index > 0}
+								canMoveDown={index < reversedLinks.length - 1}
 							/>
 						);
 					})}

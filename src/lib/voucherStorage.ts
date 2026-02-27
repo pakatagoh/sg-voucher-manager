@@ -117,3 +117,59 @@ export const deleteVoucherLink = createClientOnlyFn(
 		}
 	},
 );
+
+/**
+ * Reorder voucher links in localStorage
+ */
+export const reorderVoucherLinks = createClientOnlyFn(
+	(
+		id: string,
+		direction: "up" | "down",
+	): {
+		success: boolean;
+		message: string;
+		exceptionType: string;
+	} => {
+		try {
+			const links = getVoucherLinks();
+			const currentIndex = links.findIndex((link) => link.id === id);
+
+			if (currentIndex === -1) {
+				return {
+					success: false,
+					message: "Voucher not found",
+					exceptionType: "voucher_not_found",
+				};
+			}
+
+			const newIndex = direction === "up" ? currentIndex - 1 : currentIndex + 1;
+
+			if (newIndex < 0 || newIndex >= links.length) {
+				return {
+					success: false,
+					message: "Cannot move voucher further",
+					exceptionType: "invalid_move",
+				};
+			}
+
+			// Swap the items
+			const temp = links[currentIndex];
+			links[currentIndex] = links[newIndex];
+			links[newIndex] = temp;
+
+			localStorage.setItem(STORAGE_KEY, JSON.stringify(links));
+			return {
+				success: true,
+				message: "Voucher reordered successfully",
+				exceptionType: "",
+			};
+		} catch (error) {
+			Sentry.captureException(error);
+			return {
+				success: false,
+				message: "Failed to reorder voucher",
+				exceptionType: "storage_error",
+			};
+		}
+	},
+);
