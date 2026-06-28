@@ -1,7 +1,9 @@
 # syntax=docker/dockerfile:1
 
 # ---- Builder ----
-FROM node:22.21.1-alpine AS build
+# NOTE: Debian slim (glibc), not alpine. Rollup ships a native binary that
+# installs reliably under glibc; the musl variant on alpine is flaky with npm ci.
+FROM node:22.21.1-slim AS build
 
 WORKDIR /app
 
@@ -40,12 +42,12 @@ RUN npm run build
 
 # ---- Runtime ----
 # Distroless-free minimal Node runtime so we get a shell + env flexibility.
-FROM node:22.21.1-alpine AS runtime
+FROM node:22.21.1-slim AS runtime
 
 WORKDIR /app
 
 # Non-root user
-RUN addgroup -S app && adduser -S app -G app
+RUN groupadd --system app && useradd --system --gid app --home-dir /app app
 
 # Copy only the built server output
 COPY --from=build /app/.output ./.output
