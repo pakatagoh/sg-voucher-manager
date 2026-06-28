@@ -8,12 +8,14 @@ FROM node:22.21.1-slim AS build
 WORKDIR /app
 
 # Install deps first for better layer caching.
-# NOTE: `npm install` (not `npm ci`) — npm CLI bug #4828 causes `npm ci` to
-# skip platform-specific optional deps (e.g. @rollup/rollup-linux-x64-gnu)
-# when the lockfile was generated on a different OS. `npm install` re-resolves
-# optional deps for the build platform. The committed lockfile still pins
-# versions; this only fills in the correct native binary.
-COPY package.json package-lock.json ./
+# NOTE: We deliberately do NOT copy package-lock.json here. That lockfile was
+# generated on macOS, and npm CLI bug #4828 causes it to skip rollup's
+# Linux native binary (@rollup/rollup-linux-x64-gnu) on this Linux builder.
+# Since package.json pins every dependency to an exact version, resolving fresh
+# on Linux is deterministic for top-level deps and installs the correct
+# platform-native optional dependency. The macOS lockfile is still used for
+# local development; it is simply not authoritative inside the Linux image.
+COPY package.json ./
 RUN --mount=type=cache,target=/root/.npm \
 	npm install
 
