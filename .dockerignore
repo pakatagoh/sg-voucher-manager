@@ -1,0 +1,38 @@
+# Dependencies
+node_modules
+
+# Build output / caches
+.output
+.nitro
+dist
+.netlify
+
+# Env & secrets
+.env
+.env.*
+!.env.example
+
+# Git & editor
+.git
+.gitignore
+.github
+.vscode
+.idea
+
+# Tooling / test artifacts
+coverage
+*.log
+npm-debug.log*
+todos.json
+
+# Docs
+README.md
+AGENTS.md
+docs
+
+# Docker meta
+Dockerfile
+.dockerignore
+
+# Local data
+*.local

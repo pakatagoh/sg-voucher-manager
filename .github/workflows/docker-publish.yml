@@ -1,0 +1,132 @@
+name: Build and Publish Docker Image
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch: # allow manual runs from the Actions tab
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # ----------------------------------------------------------------
+      # Compute the CalVer tag: YY.WW.N
+      #   YY = ISO week-numbering year (2-digit)
+      #   WW = ISO week of year (01-53)
+      #   N  = next build number for this week, found by querying GHCR
+      #        for existing tags matching the YY.WW prefix and adding 1.
+      # ----------------------------------------------------------------
+      - name: Compute version tag
+        id: version
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          # ISO week-year (4-digit) so we correctly handle the Jan 1 boundary,
+          # then derive the 2-digit year from the ISO week-year (not calendar year).
+          YEAR_FULL=$(date -u +%G)
+          YEAR2=$(printf '%02d' $((10#${YEAR_FULL} % 100)))
+          WEEK=$(date -u +%V)
+          PREFIX="${YEAR2}.${WEEK}"
+          echo "Week prefix: ${PREFIX}"
+
+          # Lowercase owner + repo name → package name on GHCR
+          OWNER_LC=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
+          PACKAGE="sg-voucher-manager"
+          IMAGE_NAME="ghcr.io/${OWNER_LC}/${PACKAGE}"
+          echo "image=${IMAGE_NAME}" >> "$GITHUB_OUTPUT"
+
+          # Fetch all tags currently published for this package.
+          # /user/packages/... lists packages owned by the authenticated actor.
+          # First run → package doesn't exist yet → empty result.
+          EXISTING_TAGS=$(gh api --paginate \
+              "/user/packages/container/${PACKAGE}/versions" \
+              --jq '.[].metadata.container.tags[]?' 2>/dev/null || true)
+
+          # Find the highest N among tags matching <PREFIX>.N
+          MAX_N=0
+          if [[ -n "${EXISTING_TAGS}" ]]; then
+            while IFS= read -r tag; do
+              [[ -z "${tag}" ]] && continue
+              if [[ "${tag}" =~ ^${PREFIX}\.([0-9]+)$ ]]; then
+                n=$((10#${BASH_REMATCH[1]}))
+                if (( n > MAX_N )); then MAX_N=${n}; fi
+              fi
+            done <<< "${EXISTING_TAGS}"
+          fi
+
+          NEXT_N=$((MAX_N + 1))
+          TAG="${PREFIX}.${NEXT_N}"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "Computed image tag: ${TAG}  (previous max this week: ${MAX_N})"
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ steps.version.outputs.image }}:${{ steps.version.outputs.tag }}
+            ${{ steps.version.outputs.image }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # ----------------------------------------------------------------
+      # Retention: keep only the most recent N image versions to stay
+      # under the GHCR free-tier storage quota (500 MB shared).
+      # The version currently tagged `latest` is never deleted.
+      # NOTE: public packages with >5,000 downloads can't be API-deleted,
+      # so this only prunes early/unused tags. Harmless for a personal app.
+      # ----------------------------------------------------------------
+      - name: Prune old image versions
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          KEEP: "10"
+          PACKAGE: sg-voucher-manager
+        run: |
+          set -euo pipefail
+
+          # List every version with its tags and creation date.
+          versions=$(gh api --paginate \
+              "/user/packages/container/${PACKAGE}/versions" \
+              --jq '[.[] | {id, created_at, tags: (.metadata.container.tags // [])}]' \
+              2>/dev/null || echo "[]")
+
+          if [[ "$versions" == "[]" ]]; then
+            echo "No versions found (first run?). Skipping prune."
+            exit 0
+          fi
+
+          # Protect the version currently carrying the `latest` tag.
+          latest_id=$(echo "$versions" | jq -r '.[] | select(.tags | index("latest")) | .id' | head -1)
+          echo "Protected (latest) version id: ${latest_id}"
+
+          # Everything older than the newest KEEP versions, excluding latest.
+          to_delete=$(echo "$versions" \
+            | jq -r --argjson keep "$KEEP" --argjson latest "$latest_id" \
+              'sort_by(.created_at) | reverse | .[$keep:] | .[] | select(.id != $latest) | .id')
+
+          if [[ -z "${to_delete}" ]]; then
+            echo "Nothing to prune (≤ ${KEEP} versions)."
+            exit 0
+          fi
+
+          for id in $to_delete; do
+            echo "Deleting version ${id}..."
+            gh api -X DELETE "/user/packages/container/${PACKAGE}/versions/${id}"
+          done
+          echo "Prune complete."
