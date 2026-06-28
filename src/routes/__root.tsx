@@ -22,6 +22,7 @@ export const Route = createRootRouteWithContext<{
 }>()({
 	head: () => {
 		const baseUrl = import.meta.env.VITE_APP_URL ?? "";
+		const basePath = import.meta.env.VITE_BASE_PATH ?? "/";
 		const isProduction = import.meta.env.VITE_ENVIRONMENT === "production";
 
 		return {
@@ -34,12 +35,12 @@ export const Route = createRootRouteWithContext<{
 					content: "width=device-width, initial-scale=1",
 				},
 				{
-					title: "SG Voucher Manager",
+					title: "Voucher Manager",
 				},
 				// SEO Meta Tags
 				{
 					name: "description",
-					content: "Manage your Singapore vouchers easily",
+					content: "Manage your vouchers easily",
 				},
 				// Prevent indexing in non-production environments
 				...(!isProduction
@@ -61,11 +62,11 @@ export const Route = createRootRouteWithContext<{
 				},
 				{
 					property: "og:title",
-					content: "SG Voucher Manager",
+					content: "Voucher Manager",
 				},
 				{
 					property: "og:description",
-					content: "Manage your Singapore vouchers easily",
+					content: "Manage your vouchers easily",
 				},
 				{
 					property: "og:image",
@@ -81,7 +82,7 @@ export const Route = createRootRouteWithContext<{
 				},
 				{
 					property: "og:site_name",
-					content: "SG Voucher Manager",
+					content: "Voucher Manager",
 				},
 				// Twitter
 				{
@@ -94,11 +95,11 @@ export const Route = createRootRouteWithContext<{
 				},
 				{
 					name: "twitter:title",
-					content: "SG Voucher Manager",
+					content: "Voucher Manager",
 				},
 				{
 					name: "twitter:description",
-					content: "Manage your Singapore vouchers easily",
+					content: "Manage your vouchers easily",
 				},
 				{
 					name: "twitter:image",
@@ -112,22 +113,22 @@ export const Route = createRootRouteWithContext<{
 				},
 				{
 					rel: "apple-touch-icon",
-					href: "/apple-touch-icon.png",
+					href: `${basePath}apple-touch-icon.png`,
 					sizes: "180x180",
 				},
 				{
 					rel: "icon",
-					href: "/favicon-32x32.png",
+					href: `${basePath}favicon-32x32.png`,
 					sizes: "32x32",
 				},
 				{
 					rel: "icon",
-					href: "/favicon-16x16.png",
+					href: `${basePath}favicon-16x16.png`,
 					sizes: "16x16",
 				},
 				{
 					rel: "manifest",
-					href: "/manifest.webmanifest",
+					href: `${basePath}manifest.webmanifest`,
 				},
 				{
 					rel: "canonical",
