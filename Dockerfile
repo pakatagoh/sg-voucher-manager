@@ -3,7 +3,16 @@
 # ---- Builder ----
 # NOTE: Debian slim (glibc), not alpine. Rollup ships a native binary that
 # installs reliably under glibc; the musl variant on alpine is flaky with npm ci.
-FROM node:22.21.1-slim AS build
+FROM node:22.23.3-bookworm-slim AS build
+
+# CVE-2026-111943: Node 22.23.3 still has the pre-incident bundled roots.
+# Use ONLY the patched Debian OpenSSL store (not additive --use-system-ca).
+ENV NODE_OPTIONS=--use-openssl-ca \
+	SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends ca-certificates \
+	&& dpkg --compare-versions "$(dpkg-query -W -f='${Version}' ca-certificates)" ge '20250419~deb12u2' \
+	&& rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
@@ -50,7 +59,16 @@ RUN npm run build
 
 # ---- Runtime ----
 # Distroless-free minimal Node runtime so we get a shell + env flexibility.
-FROM node:22.21.1-slim AS runtime
+FROM node:22.23.3-bookworm-slim AS runtime
+
+# CVE-2026-111943: Node 22.23.3 still has the pre-incident bundled roots.
+# Use ONLY the patched Debian OpenSSL store (not additive --use-system-ca).
+ENV NODE_OPTIONS=--use-openssl-ca \
+	SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
+RUN apt-get update \
+	&& apt-get install -y --no-install-recommends ca-certificates \
+	&& dpkg --compare-versions "$(dpkg-query -W -f='${Version}' ca-certificates)" ge '20250419~deb12u2' \
+	&& rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
