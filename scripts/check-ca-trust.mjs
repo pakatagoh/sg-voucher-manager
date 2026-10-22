@@ -10,6 +10,7 @@ const targets = [
 	["https://ubuntu.com/", false],
 ];
 const trustErrors = new Set([
+	"CERT_REVOKED",
 	"CERT_REJECTED",
 	"UNABLE_TO_GET_ISSUER_CERT",
 	"UNABLE_TO_GET_ISSUER_CERT_LOCALLY",

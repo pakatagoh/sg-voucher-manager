@@ -3,10 +3,11 @@
 # ---- Builder ----
 # NOTE: Debian slim (glibc), not alpine. Rollup ships a native binary that
 # installs reliably under glibc; the musl variant on alpine is flaky with npm ci.
-FROM node:22.23.3-bookworm-slim AS build
+FROM node:22.23.4-bookworm-slim AS build
 
-# CVE-2026-111943: Node 22.23.3 still has the pre-incident bundled roots.
-# Use ONLY the patched Debian OpenSSL store (not additive --use-system-ca).
+# CVE-2026-111943: Node 22.23.4 includes the native certificate blocklist fix.
+# Keep ONLY the patched Debian OpenSSL store as defense in depth
+# (not additive --use-system-ca).
 ENV NODE_OPTIONS=--use-openssl-ca \
 	SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 RUN apt-get update \
@@ -59,10 +60,11 @@ RUN npm run build
 
 # ---- Runtime ----
 # Distroless-free minimal Node runtime so we get a shell + env flexibility.
-FROM node:22.23.3-bookworm-slim AS runtime
+FROM node:22.23.4-bookworm-slim AS runtime
 
-# CVE-2026-111943: Node 22.23.3 still has the pre-incident bundled roots.
-# Use ONLY the patched Debian OpenSSL store (not additive --use-system-ca).
+# CVE-2026-111943: Node 22.23.4 includes the native certificate blocklist fix.
+# Keep ONLY the patched Debian OpenSSL store as defense in depth
+# (not additive --use-system-ca).
 ENV NODE_OPTIONS=--use-openssl-ca \
 	SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 RUN apt-get update \

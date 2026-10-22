@@ -9,6 +9,11 @@ test("accepts native HTTPS and fetch certificate trust failures", () => {
 	}
 });
 
+test("accepts native blocklist revocation from HTTPS and fetch", () => {
+	assert.equal(isTrustFailure({ code: "CERT_REVOKED" }), true);
+	assert.equal(isTrustFailure({ cause: { code: "CERT_REVOKED" } }), true);
+});
+
 test("never counts connectivity errors or unrelated certificate errors as mitigation", () => {
 	for (const code of ["ENOTFOUND", "EAI_AGAIN", "ECONNREFUSED", "ECONNRESET", "ETIMEDOUT", "UND_ERR_CONNECT_TIMEOUT", "CERT_HAS_EXPIRED", "ERR_TLS_CERT_ALTNAME_INVALID"]) {
 		assert.equal(isTrustFailure({ code }), false);
